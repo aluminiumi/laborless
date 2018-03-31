@@ -500,7 +500,7 @@ function handleSignUp() {
   });
 }
 
-function handleEmployeeSignUp() {
+function handleEmployerSignUp() {
 //TODO: catch username
   var email = document.getElementById('inputEmail3').value;
   var password = document.getElementById('inputPassword3').value;
@@ -520,24 +520,6 @@ function handleEmployeeSignUp() {
   // Sign in with email and pass.
   console.log("Attempting login...");
 
-/*
-  //signInButton.addEventListener('click', function () {
-    var provider = new firebase.auth.GoogleAuthProvider();
-    //var provider = new firebase.auth.EmailAuthProvider();
-    //firebase.auth().signInWithPopup(provider);
-    firebase.auth().signInWithPopup(provider).then(function (result) {
-      var user = result.user;
-    }, function (error) {
-      var email = error.email;
-      var credential = error.credential;
-      var code = error.code;
-      alert('blah!' + email + ' ' + credential + ' ' + code);
- 
-    });
-    //firebase.auth().signInEmailAndPassword(provider);
-  //});
-*/
-
   firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
     // Handle Errors here.
     var errorCode = error.code;
@@ -550,6 +532,12 @@ function handleEmployeeSignUp() {
     console.log(error);
     console.log(error.email+' '+error.credential+' '+error.code);
   });
+
+}
+
+function handleEmployeeSignUp() {
+	//TODO: do check for @ttu.edu email address
+	handleEmployerSignUp();
 }
 
 /**
