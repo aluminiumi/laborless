@@ -18,28 +18,6 @@
 
 
 // Shortcuts to DOM Elements.
-/*
-var messageForm = document.getElementById('message-form');
-var messageInput = document.getElementById('new-post-message');
-var titleInput = document.getElementById('new-post-title');
-var signInButton = document.getElementById('sign-in-button');
-var signOutButton = document.getElementById('sign-out-button');
-var splashPage = document.getElementById('page-splash');
-var addPost = document.getElementById('add-post');
-var addButton = document.getElementById('add');
-var recentPostsSection = document.getElementById('recent-posts-list');
-var userPostsSection = document.getElementById('user-posts-list');
-var topUserPostsSection = document.getElementById('top-user-posts-list');
-var recentMenuButton = document.getElementById('menu-recent');
-var myPostsMenuButton = document.getElementById('menu-my-posts');
-var myTopPostsMenuButton = document.getElementById('menu-my-top-posts');
-var sectionElement;
-
-var signInQS = document.getElementById('quickstart-sign-in');
-var signUpQS = document.getElementById('quickstart-sign-up');
-var verifyEmail = document.getElementById('quickstart-verify-email');
-var passReset = document.getElementById('quickstart-password-reset');
-*/
 var listeningFirebaseRefs = [];
 
 
@@ -47,6 +25,7 @@ var listeningFirebaseRefs = [];
  * Saves a new post to the Firebase DB.
  */
 // [START write_fan_out]
+//TODO: remove/modify this function after/during job posting implementation
 function writeNewPost(uid, username, picture, title, body) {
   // A post entry.
   var postData = {
@@ -473,6 +452,7 @@ function toggleSignIn() {
  * Handles the sign up button press.
  */
 function handleSignUp() {
+//TODO: catch username
   var email = document.getElementById('email').value;
   var password = document.getElementById('password').value;
   if (email.length < 4) {
@@ -484,7 +464,6 @@ function handleSignUp() {
     return;
   }
   // Sign in with email and pass.
-  // [START createwithemail]
   firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
     // Handle Errors here.
     var errorCode = error.code;
@@ -498,26 +477,48 @@ function handleSignUp() {
     console.log(error);
     // [END_EXCLUDE]
   });
-  // [END createwithemail]
+}
+
+function handleEmployeeSignUp() {
+//TODO: catch username
+  var email = document.getElementById('inputEmail3').value;
+  var password = document.getElementById('inputPassword3').value;
+  if (email.length < 4) {
+    alert('Please enter an email address.');
+    return;
+  }
+  if (password.length < 4) {
+    alert('Please enter a password.');
+    return;
+  }
+  // Sign in with email and pass.
+  firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    // [START_EXCLUDE]
+    if (errorCode == 'auth/weak-password') {
+      alert('The password is too weak.');
+    } else {
+      alert(errorMessage);
+    }
+    console.log(error);
+    // [END_EXCLUDE]
+  });
 }
 
 /**
  * Sends an email verification to the user.
  */
 function sendEmailVerification() {
-  // [START sendemailverification]
   firebase.auth().currentUser.sendEmailVerification().then(function () {
     // Email Verification sent!
-    // [START_EXCLUDE]
     alert('Email Verification Sent!');
-    // [END_EXCLUDE]
   });
-  // [END sendemailverification]
 }
 
 function sendPasswordReset() {
   var email = document.getElementById('email').value;
-  // [START sendpasswordemail]
   firebase.auth().sendPasswordResetEmail(email).then(function () {
     // Password Reset Email Sent!
     // [START_EXCLUDE]
@@ -536,7 +537,6 @@ function sendPasswordReset() {
     console.log(error);
     // [END_EXCLUDE]
   });
-  // [END sendpasswordemail];
 }
 
 /**
