@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Employer Page</title>
+
+    <!--Bootstrap 4  CDN-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <!--CSS File Link-->
+    <link rel="stylesheet" href="employerPage.css">
+    <!--Font Awesome CDN-->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+    
+</head>
+<body>
+    <!--Navbar-->
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">laborLess</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon" style"color:white"></span>
+        </button>
+    
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">My Jobs
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!--Adding jumbotron to add Image and main heading-->
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container text-center">            
+            <p>
+              <!--  <a class="btn btn-lg btn-more" href="#employer-options" role="button" data-placement="bottom" data-toggle="tooltip"
+                    title="See the options below!"> <i class="fas fa-arrow-down"></i> </a>-->
+            </p>
+        </div>
+    </div>
+
+    <!--Employer Page Options-->
+    <section id="employer-options">
+        <div class="container">
+            <div class="row" id="heading-message">
+                <h1>HIRE SOMEBODY TO HELP YOU!</h1>
+            </div>
+            <div class="row">
+                <div id="btn-jobs" class="col-md-2 offset-md-1 col-xs-6 offset-xs-3">
+                        <button class="btn btn-lg btn-jobs" data-toggle="modal" data-target="#categoriesModal"><h5>New Job</h5></button>                    
+                </div>
+                <div id="btn-jobs" class="col-md-2 offset-md-2 col-xs-6 offset-xs-3">
+                    <a class="btn btn-lg btn-jobs" href="" role="button" data-placement="bottom" data-toggle="tooltip"
+                        title="See the options below!">
+                        <h5>My Jobs</h5>
+                    </a>
+                </div>
+                <div id="btn-jobs" class="col-md-2 offset-md-2 col-xs-6 offset-xs-3">
+                    <a class="btn btn-lg btn-jobs" href="" role="button" data-placement="bottom" data-toggle="tooltip"
+                        title="See the options below!">
+                        <h5>Completed Jobs</h5>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--Categories Modal triggered when user clicks 'New Job'-->
+    <div class="modal fade text-dark" id="categoriesModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="categoriesModalTitle">
+                        Categories
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fuid">
+                        <div class="row row-modal">
+                            <div class="colSquare col-md-6 col-xs-3">
+                                <a href="" data-toggle="modal" data-target="#postJobModal">
+                                    <div class="select-category">
+                                        <i class="fas fa-home"></i>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="colSquare col-md-6 col-xs-3">
+                                <a href="" data-toggle="modal" data-target="#postJobModal">
+                                    <div class="select-category">
+                                        <i class="fas fa-paw"></i>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row row-modal">
+                            <div class="colSquare col-md-6 col-xs-3">
+                                <a href="" data-toggle="modal" data-target="#postJobModal">
+                                    <div class="select-category">
+                                        <i class="fas fa-car"></i>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="colSquare col-md-6 col-xs-3">
+                                <a href="" data-toggle="modal" data-target="#postJobModal">
+                                    <div class="select-category">                                    
+                                        <i class="fas fa-tint"></i>                                   
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+    <!--Job Post Info Modal....triggered when user clicks a category-->
+    <div class="modal fade" id="postJobModal" tabindex="-1" role="dialog" aria-labelledby="postJobModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="postJobModalLabel">New Job</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="job-title" class="col-form-label">Job Title:</label>
+                            <input type="text" class="form-control" id="job-title">
+                        </div>
+                        <div class="form-group">
+                            <label for="job-description" class="col-form-label">Job Description:</label>
+                            <textarea class="form-control" id="job-description"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" style="color:white; background-color:#253374; border-radius: 10px">Post Job</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!--Other external scripts-->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+
+    <!--CDN for scrollreveal-->
+    <script src="https://unpkg.com/scrollreveal/dist/scrollreveal.min.js"></script>
+    <!--Testing some animations-->
+    <script>
+        window.sr = new ScrollReveal({ mobile: false })
+        window.sr = ScrollReveal();        
+        //About Section Animation
+        sr.reveal('#heading-message', {
+            duration: 2000,
+            origin: 'right',
+            distance: '100px'
+        });
+
+        sr.reveal('#btn-jobs', {
+                duration: 2000,
+                origin: 'top',
+                distance: '100px'
+            });
+              //window.sr = new ScrollReveal({ mobile: false })
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+html, body{
+    height: 100%;
+    overflow: hidden;
+}
+
+/*
+body{
+overflow-x: hidden;
+overflow-y: hidden;
+}*/
+
+
+/*
+    Here starts the styling of the jumbotron section
+*/
+.jumbotron {
+    display: flex;
+    align-items: center;
+    color: white;
+    background-color: #960006 !important;
+    height: 44rem;
+    width: auto;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: bold !important;
+    /*text-shadow: 0.25px 0.25px 0.25px #000000;*/
+  
+  }
+
+  h1 {
+      padding: 3rem;
+      font-size: 5rem !important;
+      font-weight: bold !important;
+      /*font-family: 'Sans' !important*/
+     /* border: white 1px solid !important;
+      border-radius: 50rem !important;*/
+  }
+
+  p {
+      display: inline-block;
+      padding: 1rem 3rem;
+  }
+
+  h5{
+    padding:3rem 0 0 0;
+    margin:0 6rem 0 0;
+  }
+
+  h5 a{
+      text-decoration: none;
+      color: white;
+      margin: auto 1rem;
+      font-style: italic;
+   }
+   h5 a:hover{
+       text-decoration:none;
+       color: black;
+       font-weight: bolder;
+
+   }
+  
+  .btn {
+    border-radius: 20px !important;
+    color: white;
+    border: white 1px solid !important;
+    
+  }
+
+  .btn:hover{
+    color:#960006;
+    background-color: white;
+    border: white 1px solid;
+    text-decoration: none;
+  }

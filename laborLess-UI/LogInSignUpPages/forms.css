@@ -1,0 +1,60 @@
+
+html, body{
+width: 100%;
+/*overflow: hidden;*/
+}
+
+body{
+    background: #960006;    
+}
+
+#student-signUp{
+    background: white;   
+    margin-top: 5rem;
+    box-shadow: 15px 15px 20px black;
+}
+
+#student-signUp h2{
+    font-size: 2.5rem !important;
+    color: #253374;
+    font-weight: bold;
+    text-align: center;
+    padding: 3rem;
+}
+
+/*
+#container-form{
+    background: white;
+}
+
+.form-title{
+    color:#253374;
+    font-weight: bold;
+    align-items: center;
+    padding: 1rem;
+}*/
+
+
+button{
+    background: #960006 !important;
+    border-radius: 8px !important;
+    width: auto;
+    color: white;
+    /*padding: 5rem; */
+    margin-left: 2rem;
+    border-color: #960006;
+    /*
+    transition:width 2s linear 1s !important; 
+    -webkit-transition:width 2s linear 1s !important; 
+    -moz-transition:width 2s linear 1s !important; 
+    -o-transition:width 2s linear 1s !important; */
+}
+
+button:hover{
+    background: white !important;
+    color:#960006 !important;
+    font-weight: bold;
+    border-color: #960006;
+    /*width: 200px !important;*/
+
+}

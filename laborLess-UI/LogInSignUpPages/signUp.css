@@ -1,0 +1,55 @@
+
+html,body{
+    overflow: hidden;
+    height: 100%;
+}
+
+body{    
+    background: white !important;
+}
+
+
+
+#fomr-section{
+    background: blue !important;
+    color: #960006 !important;
+    padding: 2rem;
+    font-weight: bold;   
+}
+
+.row{
+width:100%;
+}
+
+.form-title{
+    color:#253374;
+    font-weight: bold;
+    align-items: center;
+    padding: 1rem;
+}
+
+.form-group{
+    padding: 0.3rem;
+}
+
+button{
+    background: #960006 !important;
+    border-radius: 2rem;
+    width: 100px;
+    color: white;
+    padding-bottom: 2rem; 
+    border-color: #960006;
+    transition-property: width !important; 
+    transition-duration:5s !important;
+    transition-delay: 1s !important;
+}
+
+button:hover{
+    background: white !important;
+    color:#960006 !important;
+    font-weight: bold;
+    border-color: #960006;
+    width: 300px !important;
+
+}
+
