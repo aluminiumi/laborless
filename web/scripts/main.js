@@ -21,6 +21,26 @@
 var listeningFirebaseRefs = [];
 
 
+function postJob() {
+  //var categoriesModal = document.getElementById('categoriesModal');
+  $('#categoriesModal').modal('hide');
+
+  var postData = {
+  	jobName: document.getElementById('job-title').value,
+  	jobDescription: document.getElementById('job-description').value,
+	status: "incomplete",
+	requestedBy: firebase.auth().currentUser.uid
+  };
+ 
+  //get a key for a new post 
+  var newPostKey = firebase.database().ref().child('posts').push().key;
+
+  var updates = {};
+  updates['/Jobs/' + newPostKey] = postData;
+  return firebase.database().ref().update(updates);
+}
+
+
 /**
  * Saves a new post to the Firebase DB.
  */

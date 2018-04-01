@@ -161,12 +161,18 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn" style="color:white; background-color:#253374; border-radius: 10px">Post Job</button>
+                    <button id="post-job-btn" type="button" data-dismiss="modal" class="btn" style="color:white; background-color:#253374; border-radius: 10px">Post Job</button>
                 </div>
             </div>
         </div>
     </div>
-    
+   
+
+<script>
+        document.getElementById('post-job-btn').addEventListener('click', postJob, false);
+</script>
+
+ 
     <!--Other external scripts-->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
