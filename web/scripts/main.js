@@ -360,6 +360,7 @@ function onAuthStateChanged(user) {
 
   // We ignore token refresh events.
   if (user && currentUID === user.uid) {
+    console.log("Ignoring token refresh event");
     return;
   }
 
@@ -398,7 +399,9 @@ function onAuthStateChanged(user) {
     console.log(window.location.pathname.substring(0,18));
     
     //if we were at a login page, decide where to go next
-    if(window.location.pathname.substring(0,18) === "/LogInSignUpPages/") {
+    if(window.location.pathname.substring(0,18) === "/LogInSignUpPages/" ||
+       window.location.pathname.substring(0,10) === "/index.html" ||
+       window.location.pathname === "/") {
         if(endsWith(email, "@ttu.edu")) {
 	    console.log("ttu email address");
 	    window.location = "/studentPage/studentPage.html"; 
@@ -621,10 +624,10 @@ function initApp() {
   firebase.auth().onAuthStateChanged(onAuthStateChanged);
 
   // Bindings on load.
-  window.addEventListener('load', function () {
+  /*window.addEventListener('load', function () {
 
 
-  });
+  });*/
 }
 
 
