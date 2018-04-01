@@ -102,15 +102,17 @@
                     <div class="container-fuid">
                         <div class="row row-modal">
                             <div class="colSquare col-md-6 col-xs-3">
-                                <a href="" data-toggle="modal" data-target="#postJobModal">
-                                    <div class="select-category">
+                                <!-- a href="" data-toggle="modal" data-target="#postJobModal" -->
+                                <a>
+                                    <div id="homecat" class="select-category">
                                         <i class="fas fa-home"></i>
                                     </div>
                                 </a>
                             </div>
                             <div class="colSquare col-md-6 col-xs-3">
-                                <a href="" data-toggle="modal" data-target="#postJobModal">
-                                    <div class="select-category">
+                                <!-- a id=petcat" href="" data-toggle="modal" data-target="#postJobModal" -->
+                                <a>
+                                    <div id="petcat" class="select-category">
                                         <i class="fas fa-paw"></i>
                                     </div>
                                 </a>
@@ -118,15 +120,17 @@
                         </div>
                         <div class="row row-modal">
                             <div class="colSquare col-md-6 col-xs-3">
-                                <a href="" data-toggle="modal" data-target="#postJobModal">
-                                    <div class="select-category">
+                                <!-- a id="autocat" href="" data-toggle="modal" data-target="#postJobModal" -->
+                                <a>
+                                    <div id="autocat" class="select-category">
                                         <i class="fas fa-car"></i>
                                     </div>
                                 </a>
                             </div>
                             <div class="colSquare col-md-6 col-xs-3">
-                                <a href="" data-toggle="modal" data-target="#postJobModal">
-                                    <div class="select-category">                                    
+                                <!-- a id="cleancat" href="" data-toggle="modal" data-target="#postJobModal" -->
+                                <a>
+                                    <div id="cleancat" class="select-category">                                    
                                         <i class="fas fa-tint"></i>                                   
                                     </div>
                                 </a>
@@ -137,7 +141,14 @@
             </div>
         </div>
     </div>
-  
+ 
+<script>
+        document.getElementById('homecat').addEventListener('click', setDeptHome, false);
+        document.getElementById('autocat').addEventListener('click', setDeptAuto, false);
+        document.getElementById('petcat').addEventListener('click', setDeptPet, false);
+        document.getElementById('cleancat').addEventListener('click', setDeptClean, false);
+</script>
+ 
     <!--Job Post Info Modal....triggered when user clicks a category-->
     <div class="modal fade" id="postJobModal" tabindex="-1" role="dialog" aria-labelledby="postJobModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
