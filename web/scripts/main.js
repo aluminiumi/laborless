@@ -18,28 +18,6 @@
 
 
 // Shortcuts to DOM Elements.
-/*
-var messageForm = document.getElementById('message-form');
-var messageInput = document.getElementById('new-post-message');
-var titleInput = document.getElementById('new-post-title');
-var signInButton = document.getElementById('sign-in-button');
-var signOutButton = document.getElementById('sign-out-button');
-var splashPage = document.getElementById('page-splash');
-var addPost = document.getElementById('add-post');
-var addButton = document.getElementById('add');
-var recentPostsSection = document.getElementById('recent-posts-list');
-var userPostsSection = document.getElementById('user-posts-list');
-var topUserPostsSection = document.getElementById('top-user-posts-list');
-var recentMenuButton = document.getElementById('menu-recent');
-var myPostsMenuButton = document.getElementById('menu-my-posts');
-var myTopPostsMenuButton = document.getElementById('menu-my-top-posts');
-var sectionElement;
-
-var signInQS = document.getElementById('quickstart-sign-in');
-var signUpQS = document.getElementById('quickstart-sign-up');
-var verifyEmail = document.getElementById('quickstart-verify-email');
-var passReset = document.getElementById('quickstart-password-reset');
-*/
 var listeningFirebaseRefs = [];
 
 
@@ -47,6 +25,7 @@ var listeningFirebaseRefs = [];
  * Saves a new post to the Firebase DB.
  */
 // [START write_fan_out]
+//TODO: remove/modify this function after/during job posting implementation
 function writeNewPost(uid, username, picture, title, body) {
   // A post entry.
   var postData = {
@@ -274,6 +253,7 @@ function startDatabaseQueries() {
   var recentPostsSection = document.getElementById('recent-posts-list');
   var userPostsSection = document.getElementById('user-posts-list');
 
+  console.log("startDatabaseQueries()");
 
   // [START my_top_posts_query]
   var myUserId = firebase.auth().currentUser.uid;
@@ -323,6 +303,8 @@ function startDatabaseQueries() {
  */
 // [START basic_write]
 function writeUserData(userId, name, email, imageUrl) {
+  console.log("writeUserData");
+
   firebase.database().ref('users/' + userId).set({
     username: name,
     email: email,
@@ -335,6 +317,7 @@ function writeUserData(userId, name, email, imageUrl) {
  * Cleanups the UI and removes all Firebase listeners.
  */
 function cleanupUi() {
+/*
   var recentPostsSection = document.getElementById('recent-posts-list');
   var userPostsSection = document.getElementById('user-posts-list');
   var topUserPostsSection = document.getElementById('top-user-posts-list');
@@ -343,6 +326,9 @@ function cleanupUi() {
   topUserPostsSection.getElementsByClassName('posts-container')[0].innerHTML = '';
   recentPostsSection.getElementsByClassName('posts-container')[0].innerHTML = '';
   userPostsSection.getElementsByClassName('posts-container')[0].innerHTML = '';
+*/
+
+  console.log("cleanupUi()");
 
   // Stop all currently listening Firebase listeners.
   listeningFirebaseRefs.forEach(function (ref) {
@@ -361,22 +347,29 @@ var currentUID;
  * Triggers every time there is a change in the Firebase auth state (i.e. user signed-in or user signed out).
  */
 function onAuthStateChanged(user) {
+/*
   var signInQS = document.getElementById('quickstart-sign-in');
   var splashPage = document.getElementById('page-splash');
   var recentPostsSection = document.getElementById('recent-posts-list');
   var userPostsSection = document.getElementById('user-posts-list');
   var topUserPostsSection = document.getElementById('top-user-posts-list');
   var recentMenuButton = document.getElementById('menu-recent');
+*/
+
+  console.log("onAuthStateChanged(user)");
 
   // We ignore token refresh events.
   if (user && currentUID === user.uid) {
+    console.log("Ignoring token refresh event");
     return;
   }
 
-  cleanupUi();
-  document.getElementById('quickstart-verify-email').disabled = true;
+  //cleanupUi();
+  //document.getElementById('quickstart-verify-email').disabled = true;
 
   if (user) { // User is signed in.
+    console.log("User is signed in.");
+    
     var displayName = user.displayName;
     var email = user.email;
     var emailVerified = user.emailVerified;
@@ -385,30 +378,62 @@ function onAuthStateChanged(user) {
     var uid = user.uid;
     var providerData = user.providerData;
 
+
+/*
     document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
     signInQS.textContent = 'Sign out';
     document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
     if (!emailVerified) {
       verifyEmail.disabled = false;
     }
+*/
+
+    console.log(JSON.stringify(user, null, '  '));
 
     currentUID = user.uid;
-    splashPage.style.display = 'none';
+    //splashPage.style.display = 'none';
     writeUserData(user.uid, user.displayName, user.email, user.photoURL);
-    showSection(recentPostsSection, recentMenuButton);
+    //showSection(recentPostsSection, recentMenuButton);
     startDatabaseQueries();
+
+    console.log(window.location.pathname.substring(0,18));
+    
+    //if we were at a login page, decide where to go next
+    if(window.location.pathname.substring(0,18) === "/LogInSignUpPages/" ||
+       window.location.pathname.substring(0,10) === "/index.html" ||
+       window.location.pathname === "/") {
+        if(endsWith(email, "@ttu.edu")) {
+	    console.log("ttu email address");
+	    window.location = "/studentPage/studentPage.html"; 
+        } else {
+            console.log("not ttu email address");
+	    window.location = "/employerPage/employerPage.html";
+        }
+    }
+
   } else { // User is signed out.
-    document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
-    signInQS.textContent = 'Sign in';
-    document.getElementById('quickstart-account-details').textContent = 'null';
+    console.log("User is signed out.");
+    //document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
+    //signInQS.textContent = 'Sign in';
+    //document.getElementById('quickstart-account-details').textContent = 'null';
 
     // Set currentUID to null.
     currentUID = null;
     // Display the splash page where you can sign-in.
-    splashPage.style.display = '';
+    //splashPage.style.display = '';
+
+    //if we were at one of the logged in pages
+    if(window.location.pathname.substring(0,13) === "/studentPage/" ||
+       window.location.pathname.substring(0,14) === "/employerPage/") {
+	window.location = "/"; //go back home
+    }
   }
 
-  signInQS.disabled = false;
+  //signInQS.disabled = false;
+}
+
+function endsWith(str, suffix) {
+	return str.indexOf(suffix, str.length - suffix.length) !== -1;
 }
 
 /**
@@ -431,14 +456,14 @@ function newPostForCurrentUser(title, text) {
 
 //handles sign in button press
 function toggleSignIn() {
-  var signInQS = document.getElementById('quickstart-sign-in');
+  var signInQS = document.getElementById('loginBtn');
+
+  //if user is signed in, button acts as sign out button
   if (firebase.auth().currentUser) {
-    // [START signout]
     firebase.auth().signOut();
-    // [END signout]
-  } else {
-    var email = document.getElementById('email').value;
-    var password = document.getElementById('password').value;
+  } else { //otherwise, it's a sign in button
+    var email = document.getElementById('inputEmail3').value;
+    var password = document.getElementById('inputPassword3').value;
     if (email.length < 4) {
       alert('Please enter an email address.');
       return;
@@ -448,7 +473,6 @@ function toggleSignIn() {
       return;
     }
     // Sign in with email and pass.
-    // [START authwithemail]
     firebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
       // Handle Errors here.
       var errorCode = error.code;
@@ -463,9 +487,8 @@ function toggleSignIn() {
       signInQS.disabled = false;
       // [END_EXCLUDE]
     });
-    // [END authwithemail]
   }
-  signInQS.disabled = true;
+  //signInQS.disabled = true;
 }
 
 
@@ -473,8 +496,12 @@ function toggleSignIn() {
  * Handles the sign up button press.
  */
 function handleSignUp() {
+//TODO: catch username
+  console.log("handleSignUp()");
+
   var email = document.getElementById('email').value;
   var password = document.getElementById('password').value;
+
   if (email.length < 4) {
     alert('Please enter an email address.');
     return;
@@ -484,7 +511,6 @@ function handleSignUp() {
     return;
   }
   // Sign in with email and pass.
-  // [START createwithemail]
   firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
     // Handle Errors here.
     var errorCode = error.code;
@@ -498,26 +524,60 @@ function handleSignUp() {
     console.log(error);
     // [END_EXCLUDE]
   });
-  // [END createwithemail]
+}
+
+function handleEmployerSignUp() {
+//TODO: catch username
+  var email = document.getElementById('inputEmail3').value;
+  var password = document.getElementById('inputPassword3').value;
+
+  console.log("handleEmployeeSignUp()");
+  console.log(email);
+  console.log(password);
+
+  if (email.length < 4) {
+    alert('Please enter an email address.');
+    return;
+  }
+  if (password.length < 4) {
+    alert('Please enter a password.');
+    return;
+  }
+  // Sign in with email and pass.
+  console.log("Attempting login...");
+
+  firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    if (errorCode == 'auth/weak-password') {
+      alert('The password is too weak.');
+    } else {
+      alert(errorMessage);
+    }
+    console.log(error);
+    console.log(error.email+' '+error.credential+' '+error.code);
+  });
+
+}
+
+function handleEmployeeSignUp() {
+	//TODO: do check for @ttu.edu email address
+	handleEmployerSignUp();
 }
 
 /**
  * Sends an email verification to the user.
  */
 function sendEmailVerification() {
-  // [START sendemailverification]
   firebase.auth().currentUser.sendEmailVerification().then(function () {
     // Email Verification sent!
-    // [START_EXCLUDE]
     alert('Email Verification Sent!');
-    // [END_EXCLUDE]
   });
-  // [END sendemailverification]
 }
 
 function sendPasswordReset() {
   var email = document.getElementById('email').value;
-  // [START sendpasswordemail]
   firebase.auth().sendPasswordResetEmail(email).then(function () {
     // Password Reset Email Sent!
     // [START_EXCLUDE]
@@ -536,7 +596,6 @@ function sendPasswordReset() {
     console.log(error);
     // [END_EXCLUDE]
   });
-  // [END sendpasswordemail];
 }
 
 /**
@@ -545,95 +604,30 @@ function sendPasswordReset() {
  *    out, and that is where we update the UI.
  */
 function initApp() {
-  var messageForm = document.getElementById('message-form');
-  var messageInput = document.getElementById('new-post-message');
-  var titleInput = document.getElementById('new-post-title');
-  var signInButton = document.getElementById('sign-in-button');
-  var signOutButton = document.getElementById('sign-out-button');
-  var splashPage = document.getElementById('page-splash');
-  var addPost = document.getElementById('add-post');
-  var addButton = document.getElementById('add');
-  var recentPostsSection = document.getElementById('recent-posts-list');
-  var userPostsSection = document.getElementById('user-posts-list');
-  var topUserPostsSection = document.getElementById('top-user-posts-list');
-  var recentMenuButton = document.getElementById('menu-recent');
-  var myPostsMenuButton = document.getElementById('menu-my-posts');
-  var myTopPostsMenuButton = document.getElementById('menu-my-top-posts');
 
-  var signInQS = document.getElementById('quickstart-sign-in');
-  var signUpQS = document.getElementById('quickstart-sign-up');
-  var verifyEmail = document.getElementById('quickstart-verify-email');
-  var passReset = document.getElementById('quickstart-password-reset');
+    console.log("initApp()");
+
+    var config = {
+      apiKey: "AIzaSyDFQ1cj9Hl-sMsmuqbVv7m53cKs7gObwrM",
+      authDomain: "laborless-6d04f.firebaseapp.com",
+      databaseURL: "https://laborless-6d04f.firebaseio.com",
+      projectId: "laborless-6d04f",
+      storageBucket: "laborless-6d04f.appspot.com",
+      messagingSenderId: "801197496805"
+    };
+    firebase.initializeApp(config);
 
   var listeningFirebaseRefs = [];
 
   // Listening for auth state changes.
-  // [START authstatelistener]
+  console.log("Registering onAuthStateChanged listener");
   firebase.auth().onAuthStateChanged(onAuthStateChanged);
-  // [END authstatelistener]
-
-  signInQS.addEventListener('click', toggleSignIn, false);
-  signOutButton.addEventListener('click', toggleSignIn, false);
-  signUpQS.addEventListener('click', handleSignUp, false);
-  verifyEmail.addEventListener('click', sendEmailVerification, false);
-  passReset.addEventListener('click', sendPasswordReset, false);
 
   // Bindings on load.
-  //window.addEventListener('load', function () {
+  /*window.addEventListener('load', function () {
 
-  /*// Bind Sign in button.
-  signInButton.addEventListener('click', function () {
-    var provider = new firebase.auth.GoogleAuthProvider();
-    //var provider = new firebase.auth.EmailAuthProvider();
-    //firebase.auth().signInWithPopup(provider);
-    firebase.auth().signInWithPopup(provider).then(function (result) {
-      var user = result.user;
-    }, function (error) {
-      var email = error.email;
-      var credential = error.credential;
-      var code = error.code;
-      alert('blah!' + email + ' ' + credential + ' ' + code);
- 
-    });
-    //firebase.auth().signInEmailAndPassword(provider);
-  });
- 
-  // Bind Sign out button.
-  signOutButton.addEventListener('click', function () {
-    firebase.auth().signOut();
+
   });*/
-
-  // Saves message on form submit.
-  messageForm.onsubmit = function (e) {
-    e.preventDefault();
-    var text = messageInput.value;
-    var title = titleInput.value;
-    if (text && title) {
-      newPostForCurrentUser(title, text).then(function () {
-        myPostsMenuButton.click();
-      });
-      messageInput.value = '';
-      titleInput.value = '';
-    }
-  };
-
-  // Bind menu buttons.
-  recentMenuButton.onclick = function () {
-    showSection(recentPostsSection, recentMenuButton);
-  };
-  myPostsMenuButton.onclick = function () {
-    showSection(userPostsSection, myPostsMenuButton);
-  };
-  myTopPostsMenuButton.onclick = function () {
-    showSection(topUserPostsSection, myTopPostsMenuButton);
-  };
-  addButton.onclick = function () {
-    showSection(addPost);
-    messageInput.value = '';
-    titleInput.value = '';
-  };
-  //recentMenuButton.onclick();
-  //}, false);
 }
 
 
