@@ -19,18 +19,25 @@
 
 // Shortcuts to DOM Elements.
 var listeningFirebaseRefs = [];
+var departmentid;
 
 
 function postJob() {
+  console.log("postJob()");
   //var categoriesModal = document.getElementById('categoriesModal');
   $('#categoriesModal').modal('hide');
+
+  console.log(departmentid);
 
   var postData = {
   	jobName: document.getElementById('job-title').value,
   	jobDescription: document.getElementById('job-description').value,
 	status: "incomplete",
-	requestedBy: firebase.auth().currentUser.uid
+	requestedBy: firebase.auth().currentUser.uid,
+	department_id: departmentid
   };
+
+  //department_id can be: house, auto, pet, cleaning
  
   //get a key for a new post 
   var newPostKey = firebase.database().ref().child('posts').push().key;
@@ -38,8 +45,34 @@ function postJob() {
   var updates = {};
   updates['/Jobs/' + newPostKey] = postData;
   return firebase.database().ref().update(updates);
+
 }
 
+function setDepartmentId(id) {
+  console.log("setDepartmentId()");
+  departmentid = id;
+  $('#postJobModal').modal('show');
+}
+
+function setDeptHome() {
+  console.log("setDeptHome()");
+  setDepartmentId("house");
+}
+
+function setDeptAuto() {
+  console.log("setDeptAuto()");
+  setDepartmentId("auto");
+}
+
+function setDeptPet() {
+  console.log("setDeptPet()");
+  setDepartmentId("pet");
+}
+
+function setDeptClean() {
+  console.log("setDeptClean()");
+  setDepartmentId("cleaning");
+}
 
 /**
  * Saves a new post to the Firebase DB.
