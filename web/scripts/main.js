@@ -377,6 +377,7 @@ function onAuthStateChanged(user) {
     var uid = user.uid;
     var providerData = user.providerData;
 
+
 /*
     document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
     signInQS.textContent = 'Sign out';
@@ -393,6 +394,15 @@ function onAuthStateChanged(user) {
     writeUserData(user.uid, user.displayName, user.email, user.photoURL);
     //showSection(recentPostsSection, recentMenuButton);
     startDatabaseQueries();
+
+    if(endsWith(email, "@ttu.edu")) {
+	console.log("ttu email address");
+	window.location = "/studentPage/studentPage.html"; 
+    } else {
+        console.log("not ttu email address");
+	window.location = "/employerPage/employerPage.html";
+    }
+
   } else { // User is signed out.
     console.log("User is signed out.");
     //document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
@@ -406,6 +416,10 @@ function onAuthStateChanged(user) {
   }
 
   //signInQS.disabled = false;
+}
+
+function endsWith(str, suffix) {
+	return str.indexOf(suffix, str.length - suffix.length) !== -1;
 }
 
 /**
@@ -428,14 +442,14 @@ function newPostForCurrentUser(title, text) {
 
 //handles sign in button press
 function toggleSignIn() {
-  var signInQS = document.getElementById('quickstart-sign-in');
+  var signInQS = document.getElementById('loginBtn');
+
+  //if user is signed in, button acts as sign out button
   if (firebase.auth().currentUser) {
-    // [START signout]
     firebase.auth().signOut();
-    // [END signout]
-  } else {
-    var email = document.getElementById('email').value;
-    var password = document.getElementById('password').value;
+  } else { //otherwise, it's a sign in button
+    var email = document.getElementById('inputEmail3').value;
+    var password = document.getElementById('inputPassword3').value;
     if (email.length < 4) {
       alert('Please enter an email address.');
       return;
@@ -445,7 +459,6 @@ function toggleSignIn() {
       return;
     }
     // Sign in with email and pass.
-    // [START authwithemail]
     firebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
       // Handle Errors here.
       var errorCode = error.code;
@@ -460,9 +473,8 @@ function toggleSignIn() {
       signInQS.disabled = false;
       // [END_EXCLUDE]
     });
-    // [END authwithemail]
   }
-  signInQS.disabled = true;
+  //signInQS.disabled = true;
 }
 
 
