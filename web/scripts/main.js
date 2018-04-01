@@ -395,12 +395,17 @@ function onAuthStateChanged(user) {
     //showSection(recentPostsSection, recentMenuButton);
     startDatabaseQueries();
 
-    if(endsWith(email, "@ttu.edu")) {
-	console.log("ttu email address");
-	window.location = "/studentPage/studentPage.html"; 
-    } else {
-        console.log("not ttu email address");
-	window.location = "/employerPage/employerPage.html";
+    console.log(window.location.pathname.substring(0,18));
+    
+    //if we were at a login page, decide where to go next
+    if(window.location.pathname.substring(0,18) === "/LogInSignUpPages/") {
+        if(endsWith(email, "@ttu.edu")) {
+	    console.log("ttu email address");
+	    window.location = "/studentPage/studentPage.html"; 
+        } else {
+            console.log("not ttu email address");
+	    window.location = "/employerPage/employerPage.html";
+        }
     }
 
   } else { // User is signed out.
@@ -413,6 +418,12 @@ function onAuthStateChanged(user) {
     currentUID = null;
     // Display the splash page where you can sign-in.
     //splashPage.style.display = '';
+
+    //if we were at one of the logged in pages
+    if(window.location.pathname.substring(0,13) === "/studentPage/" ||
+       window.location.pathname.substring(0,14) === "/employerPage/") {
+	window.location = "/"; //go back home
+    }
   }
 
   //signInQS.disabled = false;
@@ -603,104 +614,16 @@ function initApp() {
     };
     firebase.initializeApp(config);
 
-/*
-  var messageForm = document.getElementById('message-form');
-  var messageInput = document.getElementById('new-post-message');
-  var titleInput = document.getElementById('new-post-title');
-  var signInButton = document.getElementById('sign-in-button');
-  var signOutButton = document.getElementById('sign-out-button');
-  var splashPage = document.getElementById('page-splash');
-  var addPost = document.getElementById('add-post');
-  var addButton = document.getElementById('add');
-  var recentPostsSection = document.getElementById('recent-posts-list');
-  var userPostsSection = document.getElementById('user-posts-list');
-  var topUserPostsSection = document.getElementById('top-user-posts-list');
-  var recentMenuButton = document.getElementById('menu-recent');
-  var myPostsMenuButton = document.getElementById('menu-my-posts');
-  var myTopPostsMenuButton = document.getElementById('menu-my-top-posts');
-
-  var signInQS = document.getElementById('quickstart-sign-in');
-  var signUpQS = document.getElementById('quickstart-sign-up');
-  var verifyEmail = document.getElementById('quickstart-verify-email');
-  var passReset = document.getElementById('quickstart-password-reset');
-*/
-
   var listeningFirebaseRefs = [];
 
   // Listening for auth state changes.
   console.log("Registering onAuthStateChanged listener");
   firebase.auth().onAuthStateChanged(onAuthStateChanged);
 
-/*
-  signInQS.addEventListener('click', toggleSignIn, false);
-  signOutButton.addEventListener('click', toggleSignIn, false);
-  signUpQS.addEventListener('click', handleSignUp, false);
-  verifyEmail.addEventListener('click', sendEmailVerification, false);
-  passReset.addEventListener('click', sendPasswordReset, false);
-*/
-
   // Bindings on load.
   window.addEventListener('load', function () {
 
-/*
-  // Bind Sign in button.
-  signInButton.addEventListener('click', function () {
-    var provider = new firebase.auth.GoogleAuthProvider();
-    //var provider = new firebase.auth.EmailAuthProvider();
-    //firebase.auth().signInWithPopup(provider);
-    firebase.auth().signInWithPopup(provider).then(function (result) {
-      var user = result.user;
-    }, function (error) {
-      var email = error.email;
-      var credential = error.credential;
-      var code = error.code;
-      alert('blah!' + email + ' ' + credential + ' ' + code);
- 
-    });
-    //firebase.auth().signInEmailAndPassword(provider);
-  });
- 
-  // Bind Sign out button.
-  signOutButton.addEventListener('click', function () {
-    firebase.auth().signOut();
-  });
 
-
-  // Saves message on form submit.
-  messageForm.onsubmit = function (e) {
-    e.preventDefault();
-    var text = messageInput.value;
-    var title = titleInput.value;
-    if (text && title) {
-      newPostForCurrentUser(title, text).then(function () {
-        myPostsMenuButton.click();
-      });
-      messageInput.value = '';
-      titleInput.value = '';
-    }
-  };
-*/
-
-/*
-  // Bind menu buttons.
-  recentMenuButton.onclick = function () {
-    showSection(recentPostsSection, recentMenuButton);
-  };
-  myPostsMenuButton.onclick = function () {
-    showSection(userPostsSection, myPostsMenuButton);
-  };
-  myTopPostsMenuButton.onclick = function () {
-    showSection(topUserPostsSection, myTopPostsMenuButton);
-  };
-  addButton.onclick = function () {
-    showSection(addPost);
-    messageInput.value = '';
-    titleInput.value = '';
-  };
-*/
-
-  //recentMenuButton.onclick();
-  //}, false);
   });
 }
 
