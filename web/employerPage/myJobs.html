@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="jobsPosts.css">
     <!--Font Awesome CDN-->
     <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+    <!--jQuery CDN-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     
 </head>
 <body>
@@ -42,13 +44,15 @@
         <!-- Testing UI look with multiple posts-->
         <section id="myJobs-section">
             <div class="container-fluid">
-                <div class="row">
+                <div class="row" id="jobPost-row">
                     <div id=job-card class="col-lg-3 col-md-6 col-sm-12">
                         <!-- Contact Card-->
                         <div class="card" mx-auto>
                             <!-- Heading -->
                             <div class="card-body">
-                                <h4 class="card-title">Walk Tobby</h4>
+                                <h4 class="card-title">Card Title</h4>
+                                <!--This will be implemented using Jordan's sample pictures-->
+                                <!--<img src="C:\Users\Luis\Documents\School\TTU\2018Spring\Capstone\laborLess\employerPage\forHire.jpg" alt="category-img" height="130" width="200" style="border-radius:50%">-->
                                 <p class="card-text" style="padding-top: 3rem;">Lorem ipsum dolor sit amet, id exerci melius mea, 
                                  id usu suas disputationi. Eos cu iuvaret lobortis conceptam. Ut qui aliquando  Lorem ipsum dolor sit amet, 
                                  id exerci melius mea, id usu suas disputationi. Eos cu iuvaret lobortis conceptam. Ut qui aliquando Lorem 
@@ -57,184 +61,13 @@
                             </div>                   
                         </div>
                     </div>
-                    <div id=job-card class="col-lg-3 col-md-6 col-sm-12">
-                        <!-- Contact Card-->
-                        <div class="card" mx-auto>
-                            <!-- Heading -->
-                            <div class="card-body">
-                                <h4 class="card-title">Wash the BMW</h4>
-                                <p class="card-text" style="padding-top: 3rem;">Lorem ipsum dolor sit amet, id exerci melius mea, id usu suas disputationi. Eos cu iuvaret lobortis conceptam.
-                                    Ut qui aliquando</p>
-                                <p class="card-text">example@gmail.com</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div id=job-card class="col-lg-3 col-md-6 col-sm-12">
-                        <!-- Contact Card-->
-                        <div class="card" mx-auto>
-                            <!-- Heading -->
-                            <div class="card-body">
-                                <h4 class="card-title">Tobby visits the Vet</h4>
-                                <p class="card-text" style="padding-top: 3rem;">id usu suas disputationi. Eos cu iuvaret lobortis conceptam. Ut qui aliquando. Lorem ipsum dolor sit amet, id exerci melius
-                                mea, id usu suas disputationi. Eos cu iuvaret lobortis conceptam. Ut qui aliquando Lorem ipsum dolor sit amet, id exerci melius mea, id usu suas disputationi. Eos cu iuvaret lobortis conceptam.
-                                    Ut qui aliquando</p>
-                                <p class="card-text">example@gmail.com</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div id=job-card class="col-lg-3 col-md-6 col-sm-12">
-                        <!-- Contact Card-->
-                        <div class="card" mx-auto>
-                            <!-- Heading -->
-                            <div class="card-body">
-                                <h4 class="card-title">Clean dishes</h4>
-                                <p class="card-text" style="padding-top: 3rem;">Lorem ipsum dolor sit amet, id exerci melius mea, id usu suas disputationi. Eos cu iuvaret lobortis conceptam.
-                                    Ut qui aliquando</p>
-                                <p class="card-text">example@gmail.com</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div id=job-card class="col-lg-3 col-md-6 col-sm-12">
-                        <!-- Contact Card-->
-                        <div class="card" mx-auto>
-                            <!-- Heading -->
-                            <div class="card-body">
-                                <h4 class="card-title">Mow yard</h4>
-                                <p class="card-text" style="padding-top: 3rem;">Lorem ipsum dolor sit amet, id exerci melius mea, id usu suas disputationi. Eos cu iuvaret lobortis conceptam.
-                                    Ut qui aliquando id usu suas disputationi. Eos cu iuvaret lobortis conceptam. Ut qui aliquando. Lorem ipsum dolor sit amet, id exerci melius
-                                    mea, id usu suas disputationi.</p>
-                                <p class="card-text">example@gmail.com</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div id=job-card class="col-lg-3 col-md-6 col-sm-12">
-                        <!-- Contact Card-->
-                        <div class="card" mx-auto>
-                            <!-- Heading -->
-                            <div class="card-body">
-                                <h4 class="card-title">Walk Tobby</h4>
-                                <p class="card-text" style="padding-top: 3rem;">Lorem ipsum dolor sit amet, id exerci melius mea, id usu suas disputationi. Eos cu iuvaret lobortis conceptam.
-                                    Ut qui aliquando</p>
-                                <p class="card-text">example@gmail.com</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div id=job-card class="col-lg-3 col-md-6 col-sm-12">
-                        <!-- Contact Card-->
-                        <div class="card" mx-auto>
-                            <!-- Heading -->
-                            <div class="card-body">
-                                <h4 class="card-title">Vacuum BMW</h4>
-                                <p class="card-text" style="padding-top: 3rem;">Lorem ipsum dolor sit amet, id exerci melius mea, id usu suas disputationi. Eos cu iuvaret lobortis conceptam.
-                                    Ut qui aliquando</p>
-                                <p class="card-text">example@gmail.com</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div id=job-card class="col-lg-3 col-md-6 col-sm-12">
-                        <!-- Contact Card-->
-                        <div class="card" mx-auto>
-                            <!-- Heading -->
-                            <div class="card-body">
-                                <h4 class="card-title">Paint wall</h4>
-                                <p class="card-text" style="padding-top: 3rem;">Lorem ipsum dolor sit amet, id exerci melius mea, id usu suas disputationi. Eos cu iuvaret lobortis conceptam.
-                                    Ut qui aliquando</p>
-                                <p class="card-text">example@gmail.com</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div id=job-card class="col-lg-3 col-md-6 col-sm-12">
-                        <!-- Contact Card-->
-                        <div class="card" mx-auto>
-                            <!-- Heading -->
-                            <div class="card-body">
-                                <h4 class="card-title">Wash windows</h4>
-                                <p class="card-text" style="padding-top: 3rem;">Lorem ipsum dolor sit amet, id exerci melius mea, id usu suas disputationi. Eos cu iuvaret lobortis conceptam.
-                                    Ut qui aliquando</p>
-                                <p class="card-text">example@gmail.com</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div id=job-card class="col-lg-3 col-md-6 col-sm-12">
-                        <!-- Contact Card-->
-                        <div class="card" mx-auto>
-                            <!-- Heading -->
-                            <div class="card-body">
-                                <h4 class="card-title">Play with Tobby</h4>
-                                <p class="card-text" style="padding-top: 3rem;">Lorem ipsum dolor sit amet, id exerci melius mea, id usu suas disputationi. Eos cu iuvaret lobortis conceptam.
-                                    Ut qui aliquando</p>
-                                <p class="card-text">example@gmail.com</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div id=job-card class="col-lg-3 col-md-6 col-sm-12">
-                        <!-- Contact Card-->
-                        <div class="card" mx-auto>
-                            <!-- Heading -->
-                            <div class="card-body">
-                                <h4 class="card-title">Walk Tobby</h4>
-                                <p class="card-text" style="padding-top: 3rem;">Lorem ipsum dolor sit amet, id exerci melius mea, id usu suas disputationi. Eos cu iuvaret lobortis conceptam.
-                                    Ut qui aliquando</p>
-                                <p class="card-text">example@gmail.com</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div id=job-card class="col-lg-3 col-md-6 col-sm-12">
-                        <!-- Contact Card-->
-                        <div class="card" mx-auto>
-                            <!-- Heading -->
-                            <div class="card-body">
-                                <h4 class="card-title">Mow front yard</h4>
-                                <p class="card-text" style="padding-top: 3rem;">Lorem ipsum dolor sit amet, id exerci melius mea, id usu suas disputationi. Eos cu iuvaret lobortis conceptam.
-                                    Ut qui aliquando</p>
-                                <p class="card-text">example@gmail.com</p>
-                            </div>
-                        </div>
-                    </div>                    
                 </div>
             </div>
-        </section>
-        
-        <!-- More info MODAL -->
-        <div class="modal fade text-dark" id="contactModal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="contactModalTitle">
-                            Contact Me
-                        </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="form-group">
-                                <label for="name">Name</label>
-                                <input type="text" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="email" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="message">Message</label>
-                                <textarea class="form-control"></textarea>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-primary btn-block">Submit</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </section>       
 
     
+    <!--Testing appending cards-->
+       <script src="jobPost.js"></script>
     <!--Other external scripts-->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
