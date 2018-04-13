@@ -28,7 +28,7 @@ body{
 .jumbotron {    
     display: flex;
     align-items: center;
-    background-image: url("employer_handshake.jpg");
+    background-image: url("img/employer_handshake.jpg");
     background-size: cover;
     color: #ffffff;
     height: 50vh;

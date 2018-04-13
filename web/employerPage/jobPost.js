@@ -3,7 +3,7 @@ Ensuring that a new job is added with the card layout and that even adding multi
 cards still work with the grid properly and is responsive */
 
 //This function can be used or if you prefer your own with vanilla javascript syntax
-$('#postJob-btn').click(function(){
+$('#post-job-btn').click(function(){
 
     var jobTitle = $("#job-title").val();    
     var jobDesc = $("#job-description").val();
@@ -26,7 +26,7 @@ $('#postJob-btn').click(function(){
         + '</div>');  
     
     //hide modal once user clicks button to post job
-    $('#postJobModal').modal('hide');
+    //$('#postJobModal').modal('hide');
 });
 
 

@@ -3,11 +3,10 @@ html, body{
     overflow: hidden;
 }
 
-/*
+
 body{
-overflow-x: hidden;
-overflow-y: hidden;
-}*/
+background-color: #960006 !important;
+}
 
 
 /*
@@ -26,14 +25,33 @@ overflow-y: hidden;
   
   }
 
-  h1 {
-      padding: 3rem;
-      font-size: 5rem !important;
-      font-weight: bold !important;
-      /*font-family: 'Sans' !important*/
-     /* border: white 1px solid !important;
-      border-radius: 50rem !important;*/
+img{
+      height: 350px;
+      width: 500px;
+      -webkit-display: block !important; 
+      display: block !important;
+      margin: auto !important;      
+      padding: auto !important;
+      align-items: center !important;
   }
+
+  @media screen and (max-width: 767px) {
+    img{
+      height: 280px;
+      width: 400px;
+      /*margin-left: 4rem;*/
+
+    }
+}
+
+  @media screen and (max-width: 500px) {
+    img{
+      height: 200px;
+      width: 320px;
+      margin-right: 1rem;
+
+    }
+}
 
   p {
       display: inline-block;
@@ -49,7 +67,6 @@ overflow-y: hidden;
       text-decoration: none;
       color: white;
       margin: auto 1rem;
-      font-style: italic;
    }
    h5 a:hover{
        text-decoration:none;
