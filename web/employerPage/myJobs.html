@@ -16,8 +16,17 @@
     <!--jQuery CDN-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     
-</head>
-<body>
+    <script src="/__/firebase/4.11.0/firebase-app.js"></script>
+    <script src="/__/firebase/4.11.0/firebase-auth.js"></script>
+    <script src="/__/firebase/4.11.0/firebase-database.js"></script>
+    <script src="/__/firebase/init.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
+    <script src="../scripts/main.js"></script>
+  
+      
+  </head>
+
+  <body onload="initApp()">
     <!--Navbar-->
     <nav class="navbar fixed-top navbar-expand-lg navbar-light">
         <a class="navbar-brand" href="#">laborLess</a>
@@ -34,30 +43,40 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="..\index.html">Logout</a>
+                    <!-- TODO: make this actually call logout function -->
+                    <a id="logout-link" class="nav-link" href="#">Logout</a>
                 </li>
             </ul>
         </div>
     </nav>
+
+    <script>
+            document.getElementById('logout-link').addEventListener('click', toggleSignIn, false);
+    </script>
 
         <!--MyJobs Posts-->
         <!-- Testing UI look with multiple posts-->
         <section id="myJobs-section">
             <div class="container-fluid">
                 <div class="row" id="jobPost-row">
-                    <div id=job-card class="col-lg-3 col-md-6 col-sm-12">
-                        <!-- Contact Card-->
-                        <div class="card" mx-auto>
-                            <!-- Heading -->
+
+                   
+                    <div id=job-static-card class="col-lg-3 col-md-6 col-sm-12">
+                        <!-- div class="card" mx-auto>
                             <div class="card-body">
                                 <h4 class="card-title">Walk Tobby</h4>
-                                <!--This will be implemented using Jordan's sample pictures-->
-                                <!--<img src="C:\Users\Luis\Documents\School\TTU\2018Spring\Capstone\laborLess\employerPage\forHire.jpg" alt="category-img" height="130" width="200" style="border-radius:50%">-->
+                            
                                 <p class="card-text" style="padding-top: 3rem;">Tobby needs to go for walk every day</p>
-                                <p class="card-text">gerrardf7@gmail.com</p>
+                                <p class="card-text-owner">gerrardf7@gmail.com</p>
                             </div>                   
-                        </div>
+                        </div -->
                     </div>
+                   
+                    <!--
+                        This will be implemented using Jordan's sample pictures
+                    <img src="C:\Users\Luis\Documents\School\TTU\2018Spring\Capstone\laborLess\employerPage\forHire.jpg" alt="category-img" height="130" width="200" style="border-radius:50%">
+                    -->
+
                 </div>
             </div>
         </section>       
