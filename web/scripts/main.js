@@ -15,7 +15,7 @@
  */
 'use strict';
 
-var desiredUsername;
+//var desiredUsername;
 
 // Shortcuts to DOM Elements.
 var listeningFirebaseRefs = [];
@@ -298,10 +298,173 @@ function deleteComment(postElement, id) {
   comment.parentElement.removeChild(comment);
 }
 
+function displayJob(jobTitle, jobDesc, requestedBy) {
+  console.log("displayJob()");
+  console.log("user: " + requestedBy);
+  //append new job as first child
+  $('#jobPost-row').prepend('<div id=job-card class="col-lg-3 col-md-6 col-sm-12">'
+    + '<div class="card" mx-auto>'
+    + '<div class="card-body">'
+    + '<h4 class="card-title">' + jobTitle + '</h4>'
+    + '<p class="card-text" style="padding-top: 3rem;">' + jobDesc + '</p>'
+    //email of course will be modified later to be only visible when employer hires a student 
+    //otherwise nobody can see it
+    + '<p class="card-text-owner">' + requestedBy + '</p>'
+    + '</div>'
+    + '</div>'
+    + '</div>');
+  console.log("posted.");
+}
+
+function getMyJobs() {
+  console.log('getMyJobs()');
+  var jobsRef = firebase.database().ref('Jobs');
+  var jobPostsSection = document.getElementById('jobPost-row');
+
+  //clear out the dummy element
+  //$("#job-card").remove();
+  //$("#jobPost-row").empty();
+
+
+  var fetchPosts = function (postsRef, sectionElement) {
+
+    postsRef.on('child_added', function (data) {
+      console.log("child added: ");
+      console.log(JSON.stringify(data.val(), null, '  '));
+
+      /*
+      {
+        "department_id": "pet",
+        "jobDescription": "My puppies need to be walked every Tuesday at 6 PM",
+        "jobName": "Walk 2 Dogs",
+        "jobPicture": "https://firebasestorage.googleapis.com/v0/b/laborless-6d04f.appspot.com/o/dogs.jpg?alt=media&token=59606a5b-687f-49b1-82e2-f9583fc105f7",
+        "requestedBy": "y0ixAWrVCSbCsKH2rvCcn7dQAeC3",
+        "status": "incomplete"
+      }
+      */
+
+      var uid = firebase.auth().currentUser.uid;
+      var requestedBy = data.val().requestedBy;
+
+      if (requestedBy === uid) {
+        console.log("Found a job by this user.");
+        var jobTitle = data.val().jobName; //$("#job-title").val();
+        var jobDesc = data.val().jobDescription; //$("#job-description").val();
+        //displayJob(jobTitle, jobDesc, requestedBy);
+
+        firebase.database().ref('users/' + uid).once('value').then(function (snapshot) {
+          console.log("1. requested by: " + requestedBy);
+          requestedBy = snapshot.val().username;
+          console.log("2. requested by: " + requestedBy);
+          console.log("3. requested by: " + requestedBy);
+
+          var status = data.val().status;
+          var jobPicture = data.val().jobPicture;
+          var department_id = data.val().department_id;
+
+          displayJob(jobTitle, jobDesc, requestedBy);
+          $("#job-card-dyn").show();
+
+        });
+        //return firebase.database().ref('/users/' + userId).once('value').then(function (snapshot) {
+        //  var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+        //requestedBy = firebase.auth().currentUser.username;
+
+
+      }
+
+    });
+    postsRef.on('child_changed', function (data) {
+      console.log("child changed");
+    });
+    postsRef.on('child_removed', function (data) {
+      console.log("child removed");
+    });
+
+  };
+
+  // Fetching and displaying all posts of each sections.
+  console.log("fetching jobs");
+  fetchPosts(jobsRef, jobPostsSection);
+
+  $("#jobPost-row").remove("#job-card");
+
+  // Keep track of all Firebase refs we are listening to.
+  listeningFirebaseRefs.push(jobsRef);
+}
+
+function getJobs() {
+  console.log('getJobs()');
+  var jobsRef = firebase.database().ref('Jobs');
+
+  var jobPostsSection = document.getElementById('jobPost-row');
+
+  var fetchPosts = function (postsRef, sectionElement) {
+
+    postsRef.on('child_added', function (data) {
+      console.log("child added: ");
+      console.log(JSON.stringify(data.val(), null, '  '));
+
+      /*
+      {
+        "department_id": "pet",
+        "jobDescription": "My puppies need to be walked every Tuesday at 6 PM",
+        "jobName": "Walk 2 Dogs",
+        "jobPicture": "https://firebasestorage.googleapis.com/v0/b/laborless-6d04f.appspot.com/o/dogs.jpg?alt=media&token=59606a5b-687f-49b1-82e2-f9583fc105f7",
+        "requestedBy": "y0ixAWrVCSbCsKH2rvCcn7dQAeC3",
+        "status": "incomplete"
+      }
+      */
+
+      var jobTitle = data.val().jobName; //$("#job-title").val();
+      var jobDesc = data.val().jobDescription; //$("#job-description").val();
+      var requestedBy = data.val().requestedBy;
+      var status = data.val().status;
+      var jobPicture = data.val().jobPicture;
+      var department_id = data.val().department_id;
+
+      //Clear out text after posting job
+      //$("#job-title").val("");
+      //$("#job-description").val("");
+
+      displayJob(jobTitle, jobDesc, requestedBy);
+
+      /*var author = data.val().author || 'Anonymous';
+      var containerElement = sectionElement.getElementsByClassName('posts-container')[0];
+      containerElement.insertBefore(
+        createPostElement(data.key, data.val().title, data.val().body, author, data.val().uid, data.val().authorPic),
+        containerElement.firstChild);*/
+    });
+    postsRef.on('child_changed', function (data) {
+      console.log("child changed");
+      /*var containerElement = sectionElement.getElementsByClassName('posts-container')[0];
+      var postElement = containerElement.getElementsByClassName('post-' + data.key)[0];
+      postElement.getElementsByClassName('mdl-card__title-text')[0].innerText = data.val().title;
+      postElement.getElementsByClassName('username')[0].innerText = data.val().author;
+      postElement.getElementsByClassName('text')[0].innerText = data.val().body;
+      postElement.getElementsByClassName('star-count')[0].innerText = data.val().starCount;*/
+    });
+    postsRef.on('child_removed', function (data) {
+      console.log("child removed");
+      /*var containerElement = sectionElement.getElementsByClassName('posts-container')[0];
+      var post = containerElement.getElementsByClassName('post-' + data.key)[0];
+      post.parentElement.removeChild(post);*/
+    });
+
+  };
+
+  // Fetching and displaying all posts of each sections.
+  console.log("fetching jobs");
+  fetchPosts(jobsRef, jobPostsSection);
+
+  // Keep track of all Firebase refs we are listening to.
+  listeningFirebaseRefs.push(jobsRef);
+}
+
 /**
  * Starts listening for new posts and populates posts lists.
  */
-function startDatabaseQueries() {
+/*function startDatabaseQueries() {
   var topUserPostsSection = document.getElementById('top-user-posts-list');
   var recentPostsSection = document.getElementById('recent-posts-list');
   var userPostsSection = document.getElementById('user-posts-list');
@@ -349,13 +512,12 @@ function startDatabaseQueries() {
   listeningFirebaseRefs.push(topUserPostsRef);
   listeningFirebaseRefs.push(recentPostsRef);
   listeningFirebaseRefs.push(userPostsRef);
-}
+}*/
 
 /**
  * Writes the user's data to the database.
  */
-// [START basic_write]
-function writeUserData(userId, name, email, imageUrl, bgcstatus) {
+/*function writeUserData(userId, name, email, imageUrl, bgcstatus) {
   console.log("writeUserData()");
 
   firebase.database().ref('users/' + userId).set({
@@ -364,8 +526,8 @@ function writeUserData(userId, name, email, imageUrl, bgcstatus) {
     profilePicture: imageUrl,
     backgroundCheckStatus: bgcstatus
   });
-}
-// [END basic_write]
+}*/
+
 
 
 function setCookie(name, value, days) {
@@ -378,6 +540,7 @@ function setCookie(name, value, days) {
   }
   document.cookie = name + "=" + (value || "") + expires + "; path=/";
 }
+
 function getCookie(name) {
   var nameEQ = name + "=";
   var ca = document.cookie.split(';');
@@ -388,6 +551,7 @@ function getCookie(name) {
   }
   return null;
 }
+
 function eraseCookie(name) {
   console.log("ERASING COOKIE");
   document.cookie = name + '=; Max-Age=-99999999;';
@@ -478,7 +642,7 @@ function onAuthStateChanged(user) {
     if (notfirsttime == 'false') { //first time user is logging in
       console.log("First login for user");
 
-      desiredUsername = getCookie('desiredusername');
+      var desiredUsername = getCookie('desiredusername');
       console.log("username from cookie: " + desiredUsername);
       eraseCookie('desiredusername');
 
@@ -513,7 +677,7 @@ function onAuthStateChanged(user) {
     //splashPage.style.display = 'none';
     //writeUserData(user.uid, user.displayName, user.email, user.photoURL, bgcstatus);
     //showSection(recentPostsSection, recentMenuButton);
-    startDatabaseQueries();
+    //startDatabaseQueries();
 
     console.log(window.location.pathname.substring(0, 18));
 
@@ -648,7 +812,7 @@ function handleSignUp() {
 function handleEmployerSignUp() {
   var email = document.getElementById('inputEmail3').value;
   var password = document.getElementById('inputPassword3').value;
-  desiredUsername = document.getElementById('inputUsername3').value;
+  var desiredUsername = document.getElementById('inputUsername3').value;
 
   setCookie('desiredusername', desiredUsername, 1);
   setCookie('establishedaccount', 'false', 1);
@@ -756,6 +920,12 @@ function initApp() {
 
 
   });*/
+
+  //window.location.pathname === "/") {
+  if (endsWith(window.location.pathname, "myJobs.html")) {
+    getMyJobs();
+  }
+
 }
 
 

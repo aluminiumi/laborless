@@ -62,13 +62,24 @@ body{
     text-align: center;
 }
 
+#job-static-card h4{
+    color: #960006;
+    text-align: center;
+    visibility: invisible;
+    opacity: 0;
+}
+
 .card-text{
     font-family: sans-serif;
     font-weight: 500;
     font-size: 10px;
 }
 
-
+.card-text-owner{
+    font-family: sans-serif;
+    font-weight: 500;
+    font-size: 10px;
+}
  
 
 
