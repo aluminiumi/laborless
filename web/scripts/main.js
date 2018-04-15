@@ -128,7 +128,7 @@ function toggleStar(postRef, uid) {
 /**
  * Creates a post element.
  */
-function createPostElement(postId, title, text, author, authorId, authorPic) {
+/*function createPostElement(postId, title, text, author, authorId, authorPic) {
   var uid = firebase.auth().currentUser.uid;
 
   var html =
@@ -234,7 +234,7 @@ function createPostElement(postId, title, text, author, authorId, authorPic) {
   star.onclick = onStarClicked;
 
   return postElement;
-}
+}*/
 
 /**
  * Writes a new comment for the given post.
@@ -461,6 +461,21 @@ function getJobs() {
   listeningFirebaseRefs.push(jobsRef);
 }
 
+function handleStudentPageData() {
+  console.log("handleStudentPageData()");
+  var uid = firebase.auth().currentUser.uid;
+  firebase.database().ref('users/' + uid).once('value').then(function (snapshot) {
+    var username = snapshot.val().username;
+    console.log("username: "+username);
+
+    document.getElementById('greeting').textContent = "Hi "+username+"!";
+
+    //displayJob(jobTitle, jobDesc, requestedBy);
+    //$("#job-card-dyn").show();
+
+  });
+}
+
 /**
  * Starts listening for new posts and populates posts lists.
  */
@@ -679,7 +694,7 @@ function onAuthStateChanged(user) {
     //showSection(recentPostsSection, recentMenuButton);
     //startDatabaseQueries();
 
-    console.log(window.location.pathname.substring(0, 18));
+    //console.log(window.location.pathname.substring(0, 18));
 
     //if we were at a login page, decide where to go next
     if (window.location.pathname.substring(0, 18) === "/LogInSignUpPages/" ||
@@ -692,6 +707,10 @@ function onAuthStateChanged(user) {
         console.log("not ttu email address");
         window.location = "/employerPage/employerPage.html";
       }
+    }
+
+    if (endsWith(window.location.pathname, "studentPage.html")) {
+      handleStudentPageData();
     }
 
   } else { // User is signed out.
