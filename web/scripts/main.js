@@ -15,7 +15,7 @@
  */
 'use strict';
 
-
+var desiredUsername;
 
 // Shortcuts to DOM Elements.
 var listeningFirebaseRefs = [];
@@ -30,15 +30,15 @@ function postJob() {
   console.log(departmentid);
 
   var postData = {
-  	jobName: document.getElementById('job-title').value,
-  	jobDescription: document.getElementById('job-description').value,
-	status: "incomplete",
-	requestedBy: firebase.auth().currentUser.uid,
-	department_id: departmentid
+    jobName: document.getElementById('job-title').value,
+    jobDescription: document.getElementById('job-description').value,
+    status: "incomplete",
+    requestedBy: firebase.auth().currentUser.uid,
+    department_id: departmentid
   };
 
   //department_id can be: house, auto, pet, cleaning
- 
+
   //get a key for a new post 
   var newPostKey = firebase.database().ref().child('posts').push().key;
 
@@ -79,7 +79,7 @@ function setDeptClean() {
  */
 // [START write_fan_out]
 //TODO: remove/modify this function after/during job posting implementation
-function writeNewPost(uid, username, picture, title, body) {
+/*function writeNewPost(uid, username, picture, title, body) {
   // A post entry.
   var postData = {
     author: username,
@@ -99,7 +99,7 @@ function writeNewPost(uid, username, picture, title, body) {
   updates['/user-posts/' + uid + '/' + newPostKey] = postData;
 
   return firebase.database().ref().update(updates);
-}
+}*/
 // [END write_fan_out]
 
 /**
@@ -355,31 +355,58 @@ function startDatabaseQueries() {
  * Writes the user's data to the database.
  */
 // [START basic_write]
-function writeUserData(userId, name, email, imageUrl) {
-  console.log("writeUserData");
+function writeUserData(userId, name, email, imageUrl, bgcstatus) {
+  console.log("writeUserData()");
 
   firebase.database().ref('users/' + userId).set({
     username: name,
     email: email,
-    profile_picture: imageUrl
+    profilePicture: imageUrl,
+    backgroundCheckStatus: bgcstatus
   });
 }
 // [END basic_write]
+
+
+function setCookie(name, value, days) {
+  console.log("ESTABLISHING COOKIE");
+  var expires = "";
+  if (days) {
+    var date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    expires = "; expires=" + date.toUTCString();
+  }
+  document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
+function getCookie(name) {
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(';');
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+}
+function eraseCookie(name) {
+  console.log("ERASING COOKIE");
+  document.cookie = name + '=; Max-Age=-99999999;';
+}
 
 /**
  * Cleanups the UI and removes all Firebase listeners.
  */
 function cleanupUi() {
-/*
-  var recentPostsSection = document.getElementById('recent-posts-list');
-  var userPostsSection = document.getElementById('user-posts-list');
-  var topUserPostsSection = document.getElementById('top-user-posts-list');
-
-  // Remove all previously displayed posts.
-  topUserPostsSection.getElementsByClassName('posts-container')[0].innerHTML = '';
-  recentPostsSection.getElementsByClassName('posts-container')[0].innerHTML = '';
-  userPostsSection.getElementsByClassName('posts-container')[0].innerHTML = '';
-*/
+  /*
+    var recentPostsSection = document.getElementById('recent-posts-list');
+    var userPostsSection = document.getElementById('user-posts-list');
+    var topUserPostsSection = document.getElementById('top-user-posts-list');
+  
+    // Remove all previously displayed posts.
+    topUserPostsSection.getElementsByClassName('posts-container')[0].innerHTML = '';
+    recentPostsSection.getElementsByClassName('posts-container')[0].innerHTML = '';
+    userPostsSection.getElementsByClassName('posts-container')[0].innerHTML = '';
+  */
 
   console.log("cleanupUi()");
 
@@ -400,14 +427,14 @@ var currentUID;
  * Triggers every time there is a change in the Firebase auth state (i.e. user signed-in or user signed out).
  */
 function onAuthStateChanged(user) {
-/*
-  var signInQS = document.getElementById('quickstart-sign-in');
-  var splashPage = document.getElementById('page-splash');
-  var recentPostsSection = document.getElementById('recent-posts-list');
-  var userPostsSection = document.getElementById('user-posts-list');
-  var topUserPostsSection = document.getElementById('top-user-posts-list');
-  var recentMenuButton = document.getElementById('menu-recent');
-*/
+  /*
+    var signInQS = document.getElementById('quickstart-sign-in');
+    var splashPage = document.getElementById('page-splash');
+    var recentPostsSection = document.getElementById('recent-posts-list');
+    var userPostsSection = document.getElementById('user-posts-list');
+    var topUserPostsSection = document.getElementById('top-user-posts-list');
+    var recentMenuButton = document.getElementById('menu-recent');
+  */
 
   console.log("onAuthStateChanged(user)");
 
@@ -422,7 +449,7 @@ function onAuthStateChanged(user) {
 
   if (user) { // User is signed in.
     console.log("User is signed in.");
-    
+
     var displayName = user.displayName;
     var email = user.email;
     var emailVerified = user.emailVerified;
@@ -430,38 +457,77 @@ function onAuthStateChanged(user) {
     var isAnonymous = user.isAnonymous;
     var uid = user.uid;
     var providerData = user.providerData;
+    var bgcstatus = user.backgroundCheckStatus;
 
 
-/*
-    document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
-    signInQS.textContent = 'Sign out';
-    document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
-    if (!emailVerified) {
-      verifyEmail.disabled = false;
-    }
-*/
+    /*
+        document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
+        signInQS.textContent = 'Sign out';
+        document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
+        if (!emailVerified) {
+          verifyEmail.disabled = false;
+        }
+    */
 
     console.log(JSON.stringify(user, null, '  '));
 
+    //if(typeof bgcstatus == 'undefined') { //first time user is logging in
+
+    //this block handles establishing initial account details on first login
+    var notfirsttime = getCookie('establishedaccount');
+    if (notfirsttime == 'false') { //first time user is logging in
+      console.log("First login for user");
+
+      desiredUsername = getCookie('desiredusername');
+      console.log("username from cookie: " + desiredUsername);
+      eraseCookie('desiredusername');
+
+      if (desiredUsername) {
+        console.log("Initializing user data.");
+        bgcstatus = "incomplete";
+        //writeUserData(user.uid, user.displayName, user.email, user.photoURL, bgcstatus);
+        firebase.database().ref('users/' + uid).set({
+          username: desiredUsername,
+          email: email,
+          //profilePicture: imageUrl,
+          backgroundCheckStatus: bgcstatus
+        });
+
+        user.updateProfile({
+          displayName: desiredUsername
+        }).then(function () {
+          //update successful
+          setCookie('establishedaccount', 'true', 1);
+        }).catch(function (error) {
+          //an error happened
+        });
+      } else {
+        console.log("Did not initialize user.");
+      }
+    }
+
+
+    //}
+
     currentUID = user.uid;
     //splashPage.style.display = 'none';
-    writeUserData(user.uid, user.displayName, user.email, user.photoURL);
+    //writeUserData(user.uid, user.displayName, user.email, user.photoURL, bgcstatus);
     //showSection(recentPostsSection, recentMenuButton);
     startDatabaseQueries();
 
-    console.log(window.location.pathname.substring(0,18));
-    
+    console.log(window.location.pathname.substring(0, 18));
+
     //if we were at a login page, decide where to go next
-    if(window.location.pathname.substring(0,18) === "/LogInSignUpPages/" ||
-       window.location.pathname.substring(0,10) === "/index.html" ||
-       window.location.pathname === "/") {
-        if(endsWith(email, "@ttu.edu")) {
-	    console.log("ttu email address");
-	    window.location = "/studentPage/studentPage.html"; 
-        } else {
-            console.log("not ttu email address");
-	    window.location = "/employerPage/employerPage.html";
-        }
+    if (window.location.pathname.substring(0, 18) === "/LogInSignUpPages/" ||
+      window.location.pathname.substring(0, 10) === "/index.html" ||
+      window.location.pathname === "/") {
+      if (endsWith(email, "@ttu.edu")) {
+        console.log("ttu email address");
+        window.location = "/studentPage/studentPage.html";
+      } else {
+        console.log("not ttu email address");
+        window.location = "/employerPage/employerPage.html";
+      }
     }
 
   } else { // User is signed out.
@@ -476,9 +542,9 @@ function onAuthStateChanged(user) {
     //splashPage.style.display = '';
 
     //if we were at one of the logged in pages
-    if(window.location.pathname.substring(0,13) === "/studentPage/" ||
-       window.location.pathname.substring(0,14) === "/employerPage/") {
-	window.location = "/"; //go back home
+    if (window.location.pathname.substring(0, 13) === "/studentPage/" ||
+      window.location.pathname.substring(0, 14) === "/employerPage/") {
+      window.location = "/"; //go back home
     }
   }
 
@@ -486,7 +552,7 @@ function onAuthStateChanged(user) {
 }
 
 function endsWith(str, suffix) {
-	return str.indexOf(suffix, str.length - suffix.length) !== -1;
+  return str.indexOf(suffix, str.length - suffix.length) !== -1;
 }
 
 /**
@@ -549,7 +615,7 @@ function toggleSignIn() {
  * Handles the sign up button press.
  */
 function handleSignUp() {
-//TODO: catch username
+  //TODO: catch username
   console.log("handleSignUp()");
 
   var email = document.getElementById('email').value;
@@ -580,13 +646,19 @@ function handleSignUp() {
 }
 
 function handleEmployerSignUp() {
-//TODO: catch username
   var email = document.getElementById('inputEmail3').value;
   var password = document.getElementById('inputPassword3').value;
+  desiredUsername = document.getElementById('inputUsername3').value;
+
+  setCookie('desiredusername', desiredUsername, 1);
+  setCookie('establishedaccount', 'false', 1);
 
   console.log("handleEmployeeSignUp()");
   console.log(email);
   console.log(password);
+  console.log(desiredUsername);
+
+  //TODO: check if username is taken
 
   if (email.length < 4) {
     alert('Please enter an email address.');
@@ -609,14 +681,17 @@ function handleEmployerSignUp() {
       alert(errorMessage);
     }
     console.log(error);
-    console.log(error.email+' '+error.credential+' '+error.code);
+    console.log(error.email + ' ' + error.credential + ' ' + error.code);
   });
+
+  console.log("Done creating user.");
+
 
 }
 
 function handleEmployeeSignUp() {
-	//TODO: do check for @ttu.edu email address
-	handleEmployerSignUp();
+  //TODO: do check for @ttu.edu email address
+  handleEmployerSignUp();
 }
 
 /**
@@ -658,17 +733,17 @@ function sendPasswordReset() {
  */
 function initApp() {
 
-    console.log("initApp()");
+  console.log("initApp()");
 
-    var config = {
-      apiKey: "AIzaSyDFQ1cj9Hl-sMsmuqbVv7m53cKs7gObwrM",
-      authDomain: "laborless-6d04f.firebaseapp.com",
-      databaseURL: "https://laborless-6d04f.firebaseio.com",
-      projectId: "laborless-6d04f",
-      storageBucket: "laborless-6d04f.appspot.com",
-      messagingSenderId: "801197496805"
-    };
-    firebase.initializeApp(config);
+  var config = {
+    apiKey: "AIzaSyDFQ1cj9Hl-sMsmuqbVv7m53cKs7gObwrM",
+    authDomain: "laborless-6d04f.firebaseapp.com",
+    databaseURL: "https://laborless-6d04f.firebaseio.com",
+    projectId: "laborless-6d04f",
+    storageBucket: "laborless-6d04f.appspot.com",
+    messagingSenderId: "801197496805"
+  };
+  firebase.initializeApp(config);
 
   var listeningFirebaseRefs = [];
 
