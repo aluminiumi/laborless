@@ -19,15 +19,22 @@
     <!--CSS File link-->
     <link rel="stylesheet" href="forms.css">
 
+  <script src="/__/firebase/4.11.0/firebase-app.js"></script>
+  <script src="/__/firebase/4.11.0/firebase-auth.js"></script>
+  <!-- script src="/__/firebase/4.11.0/firebase-database.js"></script -->
+  <script src="/__/firebase/init.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
+  <script src="../scripts/main.js"></script>
+
 </head>
-<body>
+<body onload="initApp()">
 
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-4 offset-lg-4 col-md-8 offset-md-2 col-sm-10 offset-sm-1 col-xm-12" id="student-signUp">
             <h2>Student Login</h2>
-            <form action="">
+            <div>
                 <div class="form-group row">
                     <div style="font-size:2rem; color:#a8a8a8; margin: -0.2em -0.2em 0 0.1em" class="col-sm-2 col-form">
                         <i class="fas fa-envelope"></i>
@@ -44,13 +51,15 @@
                         <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
                     </div>
                 </div>
-                <button type="submit" class="btn my-5" id="login-btn">Start Working!</button>
-            </form>
+                <button id="loginBtn" class="btn my-5" id="login-btn">Start Working!</button>
+            </div>
         </div>
     </div>
 </div>
 
-    
+<script>
+        document.getElementById('loginBtn').addEventListener('click', toggleSignIn, false);
+</script>     
 
 
     <!--Validate JS Link-->

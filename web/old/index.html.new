@@ -6,41 +6,18 @@
     <title>laborLess</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="main.js"></script>
     <!--CDN to bootstrap-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <!--CDN google fonts-->
     <link href='https://fonts.googleapis.com/css?family=Kalam' rel='stylesheet'>
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
-
-  <script src="/__/firebase/4.11.0/firebase-app.js"></script>
-  <script src="/__/firebase/4.11.0/firebase-auth.js"></script>
-  <script src="/__/firebase/4.11.0/firebase-database.js"></script>
-  <script src="/__/firebase/init.js"></script>
-
-  <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
-<!--  <script>
-    // Initialize Firebase
-    var config = {
-      apiKey: "AIzaSyDFQ1cj9Hl-sMsmuqbVv7m53cKs7gObwrM",
-      authDomain: "laborless-6d04f.firebaseapp.com",
-      databaseURL: "https://laborless-6d04f.firebaseio.com",
-      projectId: "laborless-6d04f",
-      storageBucket: "laborless-6d04f.appspot.com",
-      messagingSenderId: "801197496805"
-    };
-    firebase.initializeApp(config);
-  </script>
--->
-  <script src="../scripts/main.js"></script>
-
-
 </head>
-
-<body onload="initApp()">
+<body>
     <!--Adding jumbotron to cover whole screen-->
     <div class="jumbotron jumbotron-fluid">
         <div class="container text-center">
-          <img src="laborLess-logo.png" alt="laborless-logo">
+          <h1 class="app-name">laborLess</h1>
           <p><a class="btn btn-lg btn-student" href="LogInSignUpPages\signUpEmp.html" role="button" data-placement="bottom">Looking to Hire?</a></p> <p><a class="btn btn-lg btn-employer" href="LogInSignUpPages\signUpStu.html" role="button" data-placement="bottom">Looking to Work?</a></p>
           <h5>Already have an account?<a href="LogInSignUpPages\loginEmp.html">Employer</a><a href="LogInSignUpPages\loginStu.html">Student</a></h5>
         </div>
