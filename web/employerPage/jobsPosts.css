@@ -26,53 +26,46 @@ body{
     color: white !important;
 }
 
-/*.card{
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;     
-    background-color: white;
-}*/
 
-
+/*Card customization*/
+/*
+*/
 .card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 2);
   font-weight: bold;
   color: #494C4E;
   outline-color: white;
+  margin-bottom: 1rem;
   /*background-color: black;*/
   background-color: white;
   float: none;
-  margin: 1rem;
   top: 5rem;
   height: auto;
-  min-height: 20rem;
+  min-height: 30rem !important;
   max-height: 30rem;
-  width: auto;
-  padding: 1rem;
-  /*margin-bottom: 100px;*/
+  /**min-width: 10rem;*/
+  max-width: auto;
 }
 
-/*.card-body {
-	background: #68a2ff;
-	color: white;
-	/*padding-top: 10px;
-	padding-bottom: 5px;
-}*/
 
 #job-card h4{
     color: #960006;
     text-align: center;
+    margin:0;
+    padding:0;
 }
 
 #job-static-card h4{
     color: #960006;
     text-align: center;
-    visibility: invisible;
-    opacity: 0;
+    /*visibility: invisible;
+    opacity: 0;*/
 }
 
 .card-text{
     font-family: sans-serif;
     font-weight: 500;
-    font-size: 10px;
+    font-size: 15px;
 }
 
 .card-text-owner{
@@ -81,5 +74,24 @@ body{
     font-size: 10px;
 }
  
+.card-options{
+    /*display:none;*/
+    padding: 0.5rem;
+}
+
+/*.card:hover .card-options{
+    display: inline-block !important;
+}*/
+
+.option-icon{
+    color: #c6c6c6 !important;
+    font-size: 1.5rem; 
+    display:inline-block; 
+    padding: 2px;
+}
+
+.option-icon:hover{
+    color: #253374 !important;
+}
 
 
