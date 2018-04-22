@@ -64,11 +64,40 @@ body{
     color:  #960006 !important;
 }
 
+.card{
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 2);
+	color: #494C4E;
+}
+
+.option-icon{
+    color: #c6c6c6 !important;
+    font-size: 2rem; 
+    display:inline-block; 
+}
+
+.option-icon:hover{
+    color: #253374 !important;
+}
+
+.btn-outline-primary{
+	background: white;
+	color: #960006;
+	font-weight: bold;
+	border-color: #960006;
+	float: right;
+}
+
+.btn-outline-primary:hover, .btn-outline-primary:active, .btn-outline-primary:focus {
+  color: white !important;
+  background-color: #960006 !important;
+  border-color: #960006 !important;
+  box-shadow: none !important;
+}
+
 .job-post{
     background-color: #d9d9d9;
     padding-bottom: 20rem;
 }
-
 
 /*
 .navbar ul.navbar-right{
