@@ -1,7 +1,6 @@
 {
   "projects": {
     "default": "laborless-6d04f",
-    "staging": "laborless-6d04f",
-    "staging02": "laborless-6d04f"
+    "staging": "laborless-6d04f"
   }
 }
