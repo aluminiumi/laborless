@@ -1,0 +1,82 @@
+[debug] [2018-04-17T22:59:36.832Z] ----------------------------------------------------------------------
+[debug] [2018-04-17T22:59:36.833Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Christine\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase serve
+[debug] [2018-04-17T22:59:36.834Z] CLI Version:   3.18.4
+[debug] [2018-04-17T22:59:36.834Z] Platform:      win32
+[debug] [2018-04-17T22:59:36.834Z] Node Version:  v8.9.4
+[debug] [2018-04-17T22:59:36.834Z] Time:          Tue Apr 17 2018 17:59:36 GMT-0500 (Central Daylight Time)
+[debug] [2018-04-17T22:59:36.834Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-04-17T22:59:36.840Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-04-17T22:59:36.840Z] > authorizing via signed-in user
+[debug] [2018-04-17T22:59:36.841Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-04-17T22:59:36.841Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ { refresh_token: '1/N5kDL24QR5dnhflp-gHEjij1njO7ztOWuQIQUUfIeDee74IOn3ah-MoO-2E0W_Vk',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Tue Apr 17 2018 17:59:36 GMT-0500 (Central Daylight Time)
+[debug] [2018-04-17T22:59:37.232Z] <<< HTTP RESPONSE 200
+[debug] [2018-04-17T22:59:37.246Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/laborless-6d04f  
+  
+ Tue Apr 17 2018 17:59:37 GMT-0500 (Central Daylight Time)
+[debug] [2018-04-17T22:59:37.766Z] <<< HTTP RESPONSE 200
+[debug] [2018-04-17T22:59:37.768Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/laborless-6d04f/tokens  
+  
+ Tue Apr 17 2018 17:59:37 GMT-0500 (Central Daylight Time)
+[debug] [2018-04-17T22:59:38.174Z] <<< HTTP RESPONSE 200
+[debug] [2018-04-17T22:59:38.176Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/laborless-6d04f  
+  
+ Tue Apr 17 2018 17:59:38 GMT-0500 (Central Daylight Time)
+[debug] [2018-04-17T22:59:38.624Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'C:\Users\Christine\Documents\Spring 2018\Capstone\laborless'...
+[info] 
+[debug] [2018-04-17T22:59:38.629Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/801197496805/clients/_:getWebAppConfig  
+  
+ Tue Apr 17 2018 17:59:38 GMT-0500 (Central Daylight Time)
+[debug] [2018-04-17T22:59:39.138Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: web
+[info] +  hosting: Local server: http://localhost:5000
+
+[debug] [2018-04-18T22:02:58.636Z] ----------------------------------------------------------------------
+[debug] [2018-04-18T22:02:58.638Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Christine\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase serve
+[debug] [2018-04-18T22:02:58.638Z] CLI Version:   3.18.4
+[debug] [2018-04-18T22:02:58.638Z] Platform:      win32
+[debug] [2018-04-18T22:02:58.638Z] Node Version:  v8.9.4
+[debug] [2018-04-18T22:02:58.638Z] Time:          Wed Apr 18 2018 17:02:58 GMT-0500 (Central Daylight Time)
+[debug] [2018-04-18T22:02:58.638Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-04-18T22:02:58.645Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-04-18T22:02:58.645Z] > authorizing via signed-in user
+[debug] [2018-04-18T22:02:58.647Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-04-18T22:02:58.647Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ { refresh_token: '1/N5kDL24QR5dnhflp-gHEjij1njO7ztOWuQIQUUfIeDee74IOn3ah-MoO-2E0W_Vk',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Wed Apr 18 2018 17:02:58 GMT-0500 (Central Daylight Time)
+[debug] [2018-04-18T22:02:59.017Z] <<< HTTP RESPONSE 200
+[debug] [2018-04-18T22:02:59.023Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/laborless-6d04f  
+  
+ Wed Apr 18 2018 17:02:59 GMT-0500 (Central Daylight Time)
+[debug] [2018-04-18T22:02:59.553Z] <<< HTTP RESPONSE 200
+[debug] [2018-04-18T22:02:59.554Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/laborless-6d04f/tokens  
+  
+ Wed Apr 18 2018 17:02:59 GMT-0500 (Central Daylight Time)
+[debug] [2018-04-18T22:03:00.109Z] <<< HTTP RESPONSE 200
+[debug] [2018-04-18T22:03:00.110Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/laborless-6d04f  
+  
+ Wed Apr 18 2018 17:03:00 GMT-0500 (Central Daylight Time)
+[debug] [2018-04-18T22:03:00.537Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'C:\Users\Christine\Documents\Spring 2018\Capstone\laborless'...
+[info] 
+[debug] [2018-04-18T22:03:00.542Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/801197496805/clients/_:getWebAppConfig  
+  
+ Wed Apr 18 2018 17:03:00 GMT-0500 (Central Daylight Time)
+[debug] [2018-04-18T22:03:01.088Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: web
+[info] +  hosting: Local server: http://localhost:5000
+
