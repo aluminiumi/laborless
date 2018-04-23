@@ -94,11 +94,21 @@ body{
   box-shadow: none !important;
 }
 
-.job-post{
-    background-color: #d9d9d9;
-    padding-bottom: 20rem;
+.modal-title{
+	color: #494C4E;
 }
 
+.modal-body{
+	color: #494C4E;
+}
+
+.progress{
+	background: #c6c6c6;
+}
+
+.progress-bar-custom{
+	background: #960006;
+}
 /*
 .navbar ul.navbar-right{
     float: right !important;
