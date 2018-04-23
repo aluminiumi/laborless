@@ -58,3 +58,7 @@ button:hover{
     /*width: 200px !important;*/
 
 }
+
+#reset-close{
+    background-color: white !important;
+}
