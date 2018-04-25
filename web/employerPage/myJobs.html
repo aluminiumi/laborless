@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
     <!--CSS File Link-->
-    <link rel="stylesheet" href="jobsPosts.css">
+    <link rel="stylesheet" href="css\jobsPosts.css">
     <!--Font Awesome CDN-->
     <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
     <!--jQuery CDN-->
@@ -23,7 +23,9 @@
     <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
     <script src="../scripts/main.js"></script>
   
-      
+          
+    
+
   </head>
 
   <body onload="initApp()">
@@ -55,31 +57,111 @@
     </script>
 
         <!--MyJobs Posts-->
-        <!-- Testing UI look with multiple posts-->
         <section id="myJobs-section">
             <div class="container-fluid">
                 <div class="row" id="jobPost-row">
 
-                   
+                   <!--This is the design with picture and options-->
+                   <!--
+                       Let me know what you think about it.
+
+                       -As well, under this there is another modal that I have not finished which will be 
+                       displayed when the user click on the 'eye' icon. Thus, this modal shows
+                       the usernames of students that would like to work in that specific job post
+
+                       -We need to just list all of the users that accepted the job on the student side, 
+                       so they the usernames got appended to this modal list.
+
+                       -Maybe with an option to redirect to that student profile if employer clicks on 
+                       username or just displays the ratings when he/she clicks the username.
+
+                       -You can either choose one of these ideas or come up with one that could be easier 
+                       to implement.
+                   -->
                     <div id=job-static-card class="col-lg-3 col-md-6 col-sm-12">
-                        <!-- div class="card" mx-auto>
+                        <div class="card" mx-auto>
+
+
+                                <img class="card-img-top" src="img\puppy-test.jpg" alt="category-img">                                
                             <div class="card-body">
+                              
+
                                 <h4 class="card-title">Walk Tobby</h4>
+                               
+                                <p class="card-text" style="padding-top: 1rem;">Tobby needs to go for walk every day. It would be better if it is early in the morning and during the evening.</p>
+                            </div>   
+                            <div class="card-options">
+                               <span data-toggle="tooltip" data-placement="bottom" title="Delete Post"><i class="fas fa-trash-alt option-icon"></i></span>
+                               <span data-toggle="modal" data-placement="bottom" data-target="#hiringModal"><a data-toggle="tooltip" data-placement="bottom" title="See who is interested" class="fas fa-eye option-icon"></a></span>
+                               <span data-toggle="tooltip" data-placement="bottom" title="Job Completed"><i class="fas fa-check-circle option-icon"></i></span>
+                            </div>   
                             
-                                <p class="card-text" style="padding-top: 3rem;">Tobby needs to go for walk every day</p>
-                                <p class="card-text-owner">gerrardf7@gmail.com</p>
-                            </div>                   
-                        </div -->
-                    </div>
-                   
-                    <!--
-                        This will be implemented using Jordan's sample pictures
-                    <img src="C:\Users\Luis\Documents\School\TTU\2018Spring\Capstone\laborLess\employerPage\forHire.jpg" alt="category-img" height="130" width="200" style="border-radius:50%">
-                    -->
+                            
+                        </div>
+                    </div>  
+                    <!--Ends testing card-->
 
                 </div>
             </div>
         </section>       
+
+        <!--When employer clicks on card displays modal with list of employees interested in working-->
+        <div class="modal fade text-dark" id="hiringModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="hiringModalTitle">
+                            Select a student to hire
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <a href="#" id="student-username" data-toggle="modal" data-target="#studentInfo" data-dismiss="modal" style="color:black !important; font-size:1.2rem !important">Gerard Fierro</a>     
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         <!-- Student Info Modal -->
+        <!-- This displays the student info when the student username is clicked on the previous modal -->
+        <div class="modal fade" id="studentInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+        
+                        <!-- Displays Username -->
+                        <h5 class="modal-title" id="exampleModalLongTitle">
+                            Gerard's information</h5>
+                        <button type="button" class="close" data-toggle="modal" data-target="#hiringModal" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+        
+                    <div class="modal-body">    
+                        <!-- Profile Photo -->
+                        <img src="img\silhouette.jpg" class="rounded mx-auto mb-5 d-block" alt="user-image">
+                        <!-- User Ratings -->
+                        <h5>Knowledge</h5>
+                        <div class="progress my-2">
+                            <div class="progress-bar-custom" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <h5>Professionalism</h5>
+                        <div class="progress my-2">
+                            <div class="progress-bar-custom" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <h5>Affordability</h5>
+                        <div class="progress my-2">
+                            <div class="progress-bar-custom" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-primary">Select</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     
     <!--Testing appending cards-->
@@ -92,6 +174,12 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
 
+    <!--Testing tooltips messages-->
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
 
     <!--CDN for scrollreveal-->
     <script src="https://unpkg.com/scrollreveal/dist/scrollreveal.min.js"></script>
@@ -106,6 +194,8 @@
             distance: '100px'
         });
     </script>
+
+    
 
 </body>
 </html>
