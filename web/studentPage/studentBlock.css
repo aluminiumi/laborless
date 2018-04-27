@@ -1,0 +1,38 @@
+html,body{
+    height: 100%;
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+body{
+    background: white;
+}
+
+.navbar{
+    background-color: #960006 !important;
+}
+
+.navbar-brand{
+    font-size: 25px;
+    font-weight: bold;
+    margin-left: 2rem; 
+	color: white !important
+}
+
+/*
+.navbar a{
+    color: #dfb2b4;
+}
+
+.navbar a:hover{
+    color: white !important;
+}
+*/
+
+.nav-item a{
+	color: #dfb2b4 !important;
+}
+
+.nav-item a:hover{
+	color: white !important;
+}
