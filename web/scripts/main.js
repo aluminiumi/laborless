@@ -198,6 +198,38 @@ function displayJobToStudent(jobTitle, jobDesc, requestedBy, departmentid, jobid
 
 
 
+function displayCompletedJobToEmployer(jobTitle, jobDesc, jobCat, requestedBy) {
+  console.log("displayCompletedJobToEmployer()");
+  console.log("user: " + requestedBy);
+  //append new job as first child
+
+  var card = '<div class="card" max-width="256px">';
+  //department_id can be: house, auto, pet, cleaning
+  if (jobCat == "house") {
+    card += '<img class="card-img-top" src="/img/house.jpg" alt="home-image">';
+  } else if (jobCat == "auto") {
+    card += '<img class="card-img-top" src="/img/auto.jpg" alt="auto-image">';
+  } else if (jobCat == "pet") {
+    card += '<img class="card-img-top" src="/img/pet.jpg" alt="pet-image">';
+  } else if (jobCat == "cleaning") {
+    card += '<img class="card-img-top" src="/img/cleaning.jpg" alt="clean-image">';
+  }
+
+  card +=
+    '<div class="card-body">' +
+    '<h4 class="card-title">' + jobTitle + '</h4>' +
+    '<p class="card-text" style="padding-top: 1rem;">' + jobDesc + '</p>' +
+    '</div>' +
+    '<div class="card-options">' +
+    '<span data-toggle="tooltip" data-placement="bottom" title="Delete Post"><i class="fas fa-trash-alt option-icon"></i></span>' +
+    '<span data-toggle="tooltip" data-placement="bottom" title="Student Hired"><i class="fas fa-eye option-icon"></i></span> ' +
+    '</div>' +
+    '</div>';
+
+  $('#jobPost-row').prepend(card);
+  console.log("posted.");
+}
+
 /**
  * For each job passed to this function, a card is formed and placed on the page
  * for the employer user.
@@ -207,8 +239,8 @@ function displayJobToStudent(jobTitle, jobDesc, requestedBy, departmentid, jobid
  * @param {*} jobCat One of house, auto, pet, cleaning
  * @param {*} requestedBy Should be the employer's username
  */
-function displayJobToEmployer(jobTitle, jobDesc, jobCat, requestedBy) {
-  console.log("displayJobToEmployer()");
+function displayIncompletedJobToEmployer(jobTitle, jobDesc, jobCat, requestedBy) {
+  console.log("displayIncompletedJobToEmployer()");
   console.log("user: " + requestedBy);
   //append new job as first child
   /* Old version 
@@ -245,7 +277,7 @@ function displayJobToEmployer(jobTitle, jobDesc, jobCat, requestedBy) {
     '<div class="card-options">' +
     '<span data-toggle="tooltip" data-placement="bottom" title="Delete Post"><i class="fas fa-trash-alt option-icon"></i></span>' +
     '<span data-toggle="modal" data-placement="bottom" data-target="#hiringModal"><a data-toggle="tooltip" data-placement="bottom" title="See who is interested" class="fas fa-eye option-icon"></a></span>' +
-    '<span data-toggle="tooltip" data-placement="bottom" title="Job Completed"><i class="fas fa-check-circle option-icon"></i></span>' +
+    '<span data-toggle="tooltip" data-placement="bottom" title="Mark Job as Completed"><i class="fas fa-check-circle option-icon"></i></span>' +
     '</div>' +
     '</div>';
 
@@ -420,7 +452,19 @@ function getMyJobs(showCompletedOnly) {
           var jobPicture = data.val().jobPicture;
           var department_id = data.val().department_id;
 
-          displayJobToEmployer(jobTitle, jobDesc, department_id, requestedBy);
+          if(showCompletedOnly) {
+            if(status === "complete" ) {
+              console.log("Found completed job by user");
+              displayCompletedJobToEmployer(jobTitle, jobDesc, department_id, requestedBy);
+            } 
+          } else {
+            if(status === "incomplete") {
+              console.log("Found incomplete job by user");
+              displayIncompletedJobToEmployer(jobTitle, jobDesc, department_id, requestedBy);  
+            } 
+          }
+
+          
           $("#job-card-dyn").show();
 
         });
