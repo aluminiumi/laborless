@@ -304,8 +304,8 @@ function displayJobToStudent(jobTitle, jobDesc, requestedBy, departmentid) {
 
   var card = '<div class="card">';
   //department_id can be: house, auto, pet, cleaning
-  if(departmentid == "house") {
-    card +='<img class="card-img-top" src="img/house.jpg" alt="home-image">';
+  if (departmentid == "house") {
+    card += '<img class="card-img-top" src="img/house.jpg" alt="home-image">';
   } else if (departmentid == "auto") {
     card += '<img class="card-img-top" src="img/auto.jpg" alt="auto-image">';
   } else if (departmentid == "pet") {
@@ -315,19 +315,19 @@ function displayJobToStudent(jobTitle, jobDesc, requestedBy, departmentid) {
   }
 
   card +=
-  '<div class="card-body">' +
+    '<div class="card-body">' +
     '<h5 class="card-title">' + jobTitle + '</h5>' +
     '<p class="card-text">' + jobDesc + '</p>' +
     '<span data-target="#exampleUserProfile" data-toggle="modal" data-toggle="tooltip" data-placement="bottom" title="View User Profile"><i class="fas fa-address-card option-icon"></i></span>' +
     '<button type="button" class="btn btn-outline-primary px-4">Elect</button>' +
-  '</div>' +
-'</div>';
+    '</div>' +
+    '</div>';
 
   //append new job as first child
   $('#jobPost-row').prepend(card);
-    
-    
-    
+
+
+
   /*  '<div id=job-card class="col-lg-3 col-md-6 col-sm-12">'
     + '<div class="card" mx-auto>'
     + '<div class="card-body">'
@@ -589,9 +589,9 @@ function handleStudentPageData() {
   var uid = firebase.auth().currentUser.uid;
   firebase.database().ref('users/' + uid).once('value').then(function (snapshot) {
     var username = snapshot.val().username;
-    console.log("username: "+username);
+    console.log("username: " + username);
 
-    document.getElementById('greeting').textContent = "Hi "+username+"!";
+    document.getElementById('greeting').textContent = "Hi " + username + "!";
 
     //displayJob(jobTitle, jobDesc, requestedBy);
     //$("#job-card-dyn").show();
@@ -825,7 +825,17 @@ function onAuthStateChanged(user) {
       window.location.pathname === "/") {
       if (endsWith(email, "@ttu.edu")) {
         console.log("ttu email address");
-        window.location = "/studentPage/studentPage.html";
+        
+        //check background check status
+        firebase.database().ref('users/' + currentUID).once('value').then(function (snapshot) {
+          var bgcstatus = snapshot.val().backgroundCheckStatus;
+          console.log("bgcstatus: " + bgcstatus);
+          if (bgcstatus === "passed") { //student passed background check
+            window.location = "/studentPage/studentPage.html";
+          } else {
+            window.location = "/studentPage/studentBlock.html";
+          }
+        });
       } else {
         console.log("not ttu email address");
         window.location = "/employerPage/employerPage.html";
@@ -1083,6 +1093,21 @@ function initApp() {
     getJobsByCategory("pet");
   }
 
+
+  else if (endsWith(window.location.pathname, "studentBlock.html")) {
+    if (firebase.auth().currentUser) {
+      var currentUID = firebase.auth().currentUser.uid;
+      firebase.database().ref('users/' + currentUID).once('value').then(function (snapshot) {
+        var bgcstatus = snapshot.val().backgroundCheckStatus;
+        console.log("bgcstatus: " + bgcstatus);
+        if (bgcstatus === "passed") { //student passed background check
+          window.location = "/studentPage/studentPage.html";
+        }
+      });
+    } else { //not logged in
+        //window.location = "/";
+    }
+  }
 }
 
 
