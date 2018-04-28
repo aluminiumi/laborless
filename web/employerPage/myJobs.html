@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
     <!--CSS File Link-->
-    <link rel="stylesheet" href="css/jobsPosts.css">
+    <link rel="stylesheet" href="jobsPosts.css">
     <!--Font Awesome CDN-->
     <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
     <!--jQuery CDN-->
@@ -104,7 +104,7 @@
         <!--When employer clicks on card displays modal with list of employees interested in working-->
         <div class="modal fade text-dark" id="hiringModal" tabindex="-1" role="dialog">
             <div class="modal-dialog">
-                <div class="modal-content">
+                <div id="hiringModalContent" class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="hiringModalTitle">
                             Select a student to hire
@@ -114,7 +114,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <a href="#" id="student-username" data-toggle="modal" data-target="#studentInfo" data-dismiss="modal" style="color:black !important; font-size:1.2rem !important">Gerard Fierro</a>     
+                        <!-- a href="#" id="student-username" data-toggle="modal" data-target="#studentInfo" data-dismiss="modal" style="color:black !important; font-size:1.2rem !important">Gerard Fierro</a -->     
                     </div>
                 </div>
             </div>
@@ -135,9 +135,9 @@
                         </button>
                     </div>
         
-                    <div class="modal-body">    
+                    <div id="studentInfoModalBody" class="modal-body">    
                         <!-- Profile Photo -->
-                        <img src="img\silhouette.jpg" class="rounded mx-auto mb-5 d-block" alt="user-image">
+                        <img src="img/silhouette.jpg" class="rounded mx-auto mb-5 d-block" alt="user-image">
                         <!-- User Ratings -->
                         <h5>Knowledge</h5>
                         <div class="progress my-2">
@@ -152,8 +152,8 @@
                             <div class="progress-bar-custom" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-primary">Select</button>
+                    <div id="studentInfoModalFooter" class="modal-footer">
+                        <button id="selectUserBtn" type="button" class="btn btn-outline-primary">Select</button>
                     </div>
                 </div>
             </div>

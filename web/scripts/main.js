@@ -116,13 +116,26 @@ function electForJob(jobid) {
       requestedBy: firebase.auth().currentUser.uid,
       department_id: departmentid
     };*/
-  
+
     //get a key for a new post 
     var newPostKey = firebase.database().ref().child('posts').push().key;
-  
+
     var updates = {};
     updates['/Jobs/' + jobid + '/queuedWorkers/' + newPostKey] = currentUID;
-    return firebase.database().ref().update(updates);
+    firebase.database().ref().update(updates);
+
+    if (endsWith(window.location.pathname, "studentCar.html")) {
+      window.location = '/studentPage/studentCategories/studentCar.html';
+    }
+    else if (endsWith(window.location.pathname, "studentClean.html")) {
+      window.location = '/studentPage/studentCategories/studentClean.html';
+    }
+    else if (endsWith(window.location.pathname, "studentHome.html")) {
+      window.location = '/studentPage/studentCategories/studentHome.html';
+    }
+    else if (endsWith(window.location.pathname, "studentPets.html")) {
+      window.location = '/studentPage/studentCategories/studentPets.html';
+    }
   }
 }
 
@@ -229,43 +242,6 @@ function markJobCompleted(jobid) {
 
 
 
-function displayCompletedJobToEmployer(jobTitle, jobDesc, jobCat, requestedBy, jobid) {
-  console.log("displayCompletedJobToEmployer()");
-  console.log("user: " + requestedBy);
-  //append new job as first child
-
-  var card = '<div class="card" max-width="256px">';
-  //department_id can be: house, auto, pet, cleaning
-  if (jobCat == "house") {
-    card += '<img class="card-img-top" src="/img/house.jpg" alt="home-image">';
-  } else if (jobCat == "auto") {
-    card += '<img class="card-img-top" src="/img/auto.jpg" alt="auto-image">';
-  } else if (jobCat == "pet") {
-    card += '<img class="card-img-top" src="/img/pet.jpg" alt="pet-image">';
-  } else if (jobCat == "cleaning") {
-    card += '<img class="card-img-top" src="/img/cleaning.jpg" alt="clean-image">';
-  }
-
-  card +=
-    '<div class="card-body">' +
-    '<h4 class="card-title">' + jobTitle + '</h4>' +
-    '<p class="card-text" style="padding-top: 1rem;">' + jobDesc + '</p>' +
-    '</div>' +
-    '<div class="card-options">' +
-    '<span data-toggle="tooltip" ' +
-    '    data-placement="bottom" ' +
-    '    onclick="deleteJob(\'' + jobid + '\');"' +
-    '    title="Delete Post"> '+
-    ' <i class="fas fa-trash-alt option-icon"></i> ' +
-    '</span>' +
-    '<span data-toggle="tooltip" data-placement="bottom" title="Student Hired"><i class="fas fa-eye option-icon"></i></span> ' +
-    '</div>' +
-    '</div>';
-
-  $('#jobPost-row').prepend(card);
-  console.log("posted.");
-}
-
 /**
  * For each job passed to this function, a card is formed and placed on the page
  * for the employer user.
@@ -275,8 +251,10 @@ function displayCompletedJobToEmployer(jobTitle, jobDesc, jobCat, requestedBy, j
  * @param {*} jobCat One of house, auto, pet, cleaning
  * @param {*} requestedBy Should be the employer's username
  * @param {*} jobid The database key of the job
+ * @param {*} showCompletedJobs True if completed jobs are being shown; False if incomplete jobs are being shown
+ * @param {*} workers Array of queued workers on the job
  */
-function displayIncompletedJobToEmployer(jobTitle, jobDesc, jobCat, requestedBy, jobid) {
+function displayJobToEmployer(jobTitle, jobDesc, jobCat, requestedBy, jobid, showCompletedJobs, workers) {
   console.log("displayIncompletedJobToEmployer()");
   console.log("user: " + requestedBy);
   //append new job as first child
@@ -315,22 +293,136 @@ function displayIncompletedJobToEmployer(jobTitle, jobDesc, jobCat, requestedBy,
     '<span data-toggle="tooltip" ' +
     '    data-placement="bottom" ' +
     '    onclick="deleteJob(\'' + jobid + '\');"' +
-    '    title="Delete Post"> '+
+    '    title="Delete Post"> ' +
     ' <i class="fas fa-trash-alt option-icon"></i> ' +
-    '</span>' +
-    '<span data-toggle="modal" data-placement="bottom" data-target="#hiringModal"><a data-toggle="tooltip" data-placement="bottom" title="See who is interested" class="fas fa-eye option-icon"></a></span>' +
-    '<span data-toggle="tooltip" ' +
-    '    data-placement="bottom" ' +
-    '    onclick="markJobCompleted(\'' + jobid + '\');"' +
-    '    title="Mark Job as Completed"> ' +
-    '  <i class="fas fa-check-circle option-icon"></i> '+
-    '</span>' +
+    '</span>';
+
+  if (showCompletedJobs) {
+    card += '<span data-toggle="tooltip" data-placement="bottom" title="Student Hired"><i class="fas fa-eye option-icon"></i></span> ';
+  } else {
+    card +=
+      '<span data-toggle="modal" ' +
+      '      data-placement="bottom" ' +
+      '      data-target="#hiringModal"> ' +
+      '          <a data-toggle="tooltip" ' +
+      '             data-placement="bottom" ' +
+      '             title="See who is interested" ' +
+      '             onclick="showWorkerQueueModal(\'' + workers + '\', \'' + jobid + '\');"' +
+      '             class="fas fa-eye option-icon"> ' +
+      '          </a> ' +
+      '</span>' +
+      '<span data-toggle="tooltip" ' +
+      '    data-placement="bottom" ' +
+      '    onclick="markJobCompleted(\'' + jobid + '\');"' +
+      '    title="Mark Job as Completed"> ' +
+      '  <i class="fas fa-check-circle option-icon"></i> ' +
+      '</span>';
+  }
+
+  card +=
     '</div>' +
     '</div>';
 
   $('#jobPost-row').prepend(card);
   console.log("posted.");
 }
+
+
+
+/**
+ * This function creates the list of workers queued for each job.
+ * It is used by the employer myJobs.html
+ * @param {*} workers The list of workers queued for the selected job
+ */
+function showWorkerQueueModal(workers, jobid) {
+  console.log("showWorkerQueueModal(" + workers + ")");
+  console.log("jobid: "+jobid);
+  //var profilemodal = document.getElementById('student-username');
+  //profilemodal.innerText = workers;
+
+  workers = workers.split(',');
+  console.log("workers.length: " + workers.length);
+
+  var hiringmodal = document.getElementById('hiringModalContent');
+
+  //clean up results from previous lookups
+  while (hiringmodal.childElementCount > 1) {
+    hiringmodal.removeChild(hiringmodal.lastChild);
+  }
+
+  //hiringmodal
+  //$('#hiringModalContent').remove()
+
+
+  var listWithUsername = function(workerid, jobid) { 
+    getUsernameOfId(workerid).then(function (username) {
+      if (username) {
+        console.log("username: " + username);
+        console.log("workerid: " + workerid);
+        console.log("jobid: "+jobid);
+        var entry = '' +
+          '<div class="modal-body"> ' +
+          '<a href="#" ' +
+          '   id="student-username" ' +
+          '   data-toggle="modal" ' +
+          '   data-target="#studentInfo" ' +
+          '   data-dismiss="modal" ' +
+          '   onclick="showWorkerProfile(\'' + workerid + '\', \'' + username + '\', \'' + jobid + '\');"' +
+          '   style="color:black !important; font-size:1.2rem !important">' +
+          username
+        '</a> ' +
+          '</div>';
+        $('#hiringModalContent').append(entry);
+      } else {
+        var entry = '' +
+          '<div class="modal-body"> ' +
+          'No users have elected to do this job, yet.' +
+          '</div>';
+        $('#hiringModalContent').append(entry);
+      }
+    });
+    
+  }    
+
+  for (var i = 0; i < workers.length; i++) {
+    listWithUsername(workers[i], jobid);
+  }
+}
+
+
+
+function showWorkerProfile(workerid, username, jobid) {
+  console.log("showWorkerProfile(" + workerid + ")");
+  var profilemodal = document.getElementById('exampleModalLongTitle');
+  profilemodal.innerText = username + "\'s Information";
+  //var selectbtn = document.getElementById('selectUserBtn');
+  var footer = document.getElementById('studentInfoModalFooter');
+  footer.innerHTML = '' +
+    '<button id="selectUserBtn" ' +
+    '        type="button" ' +
+    '        onclick="selectUserForJob(\''+workerid+ '\',\'' + jobid + '\')" ' +
+    '        class="btn btn-outline-primary"> ' +
+    'Select' +
+    '</button>';
+  //selectbtn.addEventListener('click', selectUserForJob(workerid, jobid), false);
+}
+
+
+function selectUserForJob(workerid, jobid) {
+  console.log("selectUserForJob("+workerid+", "+jobid+")");
+  var updates = {};
+  updates['/Jobs/' + jobid + "/completedBy"] = workerid;
+  return firebase.database().ref().update(updates);
+}
+
+
+function getUsernameOfId(uid) {
+  var username = firebase.database().ref('users/' + uid).once('value').then(function (snapshot) {
+    return snapshot.val().username;
+  });
+  return username;
+}
+
 
 
 /**
@@ -348,13 +440,31 @@ function showProfileModal(requestedBy) {
 
 
 
-/*
-function getUsernameOfId(uid) {
-  firebase.database().ref('users/' + uid).once('value').then(function (snapshot) {
-    var username = snapshot.val().username;
-    return username;
+
+
+
+
+
+function fetchWorkers(workersRef, jobid) {
+  var workers = [];
+  workersRef.on('child_added', function (data) {
+    console.log("worker child added: ");
+    console.log(data.key);
+    console.log(JSON.stringify(data.val(), null, '  '));
+
+    //clean up previous sloppiness
+    //check if worker already exists in our array; if so, remove it from db and fail to push
+    console.log("location of this worker in our array: " + workers.indexOf(data.val()));
+    if (workers.indexOf(data.val()) == -1) {
+      console.log("worker is new; adding");
+      workers.push(data.val());
+    } else {
+      console.log("worker is a duplicate; removing");
+      removeWorkerKeyFromJob(data.key, jobid);
+    }
   });
-}*/
+  return workers;
+}
 
 
 
@@ -408,13 +518,28 @@ function getJobsByCategory(desiredcategory) {
 
           console.log("username: " + username);
           var status = data.val().status;
-          var jobPicture = data.val().jobPicture;
-          var department_id = data.val().department_id;
 
-          //createProfileModal(requestedBy, profileid);
-          displayJobToStudent(jobTitle, jobDesc, requestedBy, department_id, data.key);
-          username = null;
-          $("#job-card-dyn").show();
+          //only show incomplete jobs
+          if (status === "incomplete") {
+            var jobPicture = data.val().jobPicture;
+            var department_id = data.val().department_id;
+
+            var workersRef = firebase.database().ref('Jobs/' + data.key + "/queuedWorkers");
+            var workers = fetchWorkers(workersRef, data.key);
+            console.log("workers: " + workers)
+
+            //check if this user is already queued for this job
+            if (workers.indexOf(currentUID) == -1) {
+              displayJobToStudent(jobTitle, jobDesc, requestedBy, department_id, data.key);
+              $("#job-card-dyn").show();
+            } else {
+              console.log("User has already elected to do this job.");
+            }
+
+
+
+          }
+
 
         });
 
@@ -446,6 +571,18 @@ function getJobsByCategory(desiredcategory) {
   listeningFirebaseRefs.push(jobsRef);
 }
 
+
+
+/**
+ * Used to remove duplicate workers in worker queue
+ * 
+ * @param {*} workerkey 
+ * @param {*} jobid 
+ */
+function removeWorkerKeyFromJob(workerkey, jobid) {
+  console.log("removeWorkerFromJob(" + workerkey + ", " + jobid + ")");
+  firebase.database().ref('Jobs/' + jobid + '/queuedWorkers').child(workerkey).remove();
+}
 
 
 
@@ -495,23 +632,18 @@ function getMyJobs(showCompletedOnly) {
           requestedBy = snapshot.val().username;
 
           var status = data.val().status;
-          console.log("status: "+status);
+          console.log("status: " + status);
           var jobPicture = data.val().jobPicture;
           var department_id = data.val().department_id;
 
-          if(showCompletedOnly) {
-            if(status === "complete" ) {
-              console.log("Found completed job by user");
-              displayCompletedJobToEmployer(jobTitle, jobDesc, department_id, requestedBy, data.key);
-            } 
-          } else {
-            if(status === "incomplete") {
-              console.log("Found incomplete job by user");
-              displayIncompletedJobToEmployer(jobTitle, jobDesc, department_id, requestedBy, data.key);  
-            } 
+          if ((showCompletedOnly && status === "complete") || (!showCompletedOnly && status === "incomplete")) {
+            var workersRef = firebase.database().ref('Jobs/' + data.key + "/queuedWorkers");
+            var workers = fetchWorkers(workersRef, data.key);
+            console.log("workers: " + workers)
+            displayJobToEmployer(jobTitle, jobDesc, department_id, requestedBy, data.key, showCompletedOnly, workers);
           }
 
-          
+
           $("#job-card-dyn").show();
 
         });
