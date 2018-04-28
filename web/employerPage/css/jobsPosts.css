@@ -44,9 +44,11 @@ body{
   min-height: 30rem !important;
   max-height: 30rem;
   /**min-width: 10rem;*/
-  max-width: auto;
 }
 
+.card-img-top {
+    width: 20em;
+}
 
 #job-card h4{
     color: #960006;
