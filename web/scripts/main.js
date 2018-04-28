@@ -212,6 +212,21 @@ function deleteJob(jobid) {
 
 
 
+function markJobCompleted(jobid) {
+  var updates = {};
+  updates['/Jobs/' + jobid + "/status"] = "complete";
+  firebase.database().ref().update(updates);
+
+  if (endsWith(window.location.pathname, "myJobs.html")) {
+    window.location = '/employerPage/myJobs.html';
+  }
+  else if (endsWith(window.location.pathname, "completedJobs.html")) {
+    window.location = '/employerPage/completedJobs.html';
+  }
+}
+
+
+
 
 
 function displayCompletedJobToEmployer(jobTitle, jobDesc, jobCat, requestedBy, jobid) {
@@ -304,7 +319,12 @@ function displayIncompletedJobToEmployer(jobTitle, jobDesc, jobCat, requestedBy,
     ' <i class="fas fa-trash-alt option-icon"></i> ' +
     '</span>' +
     '<span data-toggle="modal" data-placement="bottom" data-target="#hiringModal"><a data-toggle="tooltip" data-placement="bottom" title="See who is interested" class="fas fa-eye option-icon"></a></span>' +
-    '<span data-toggle="tooltip" data-placement="bottom" title="Mark Job as Completed"><i class="fas fa-check-circle option-icon"></i></span>' +
+    '<span data-toggle="tooltip" ' +
+    '    data-placement="bottom" ' +
+    '    onclick="markJobCompleted(\'' + jobid + '\');"' +
+    '    title="Mark Job as Completed"> ' +
+    '  <i class="fas fa-check-circle option-icon"></i> '+
+    '</span>' +
     '</div>' +
     '</div>';
 
