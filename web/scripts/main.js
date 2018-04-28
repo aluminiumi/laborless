@@ -298,6 +298,51 @@ function deleteComment(postElement, id) {
   comment.parentElement.removeChild(comment);
 }
 
+function displayJobToStudent(jobTitle, jobDesc, requestedBy, departmentid) {
+  console.log("displayJob()");
+  console.log("user: " + requestedBy);
+
+  var card = '<div class="card">';
+  //department_id can be: house, auto, pet, cleaning
+  if(departmentid == "house") {
+    card +='<img class="card-img-top" src="img/house.jpg" alt="home-image">';
+  } else if (departmentid == "auto") {
+    card += '<img class="card-img-top" src="img/auto.jpg" alt="auto-image">';
+  } else if (departmentid == "pet") {
+    card += '<img class="card-img-top" src="img/pet.jpg" alt="pet-image">';
+  } else if (departmentid == "cleaning") {
+    card += '<img class="card-img-top" src="img/cleaning.jpg" alt="clean-image">';
+  }
+
+  card +=
+  '<div class="card-body">' +
+    '<h5 class="card-title">' + jobTitle + '</h5>' +
+    '<p class="card-text">' + jobDesc + '</p>' +
+    '<span data-target="#exampleUserProfile" data-toggle="modal" data-toggle="tooltip" data-placement="bottom" title="View User Profile"><i class="fas fa-address-card option-icon"></i></span>' +
+    '<button type="button" class="btn btn-outline-primary px-4">Elect</button>' +
+  '</div>' +
+'</div>';
+
+  //append new job as first child
+  $('#jobPost-row').prepend(card);
+    
+    
+    
+  /*  '<div id=job-card class="col-lg-3 col-md-6 col-sm-12">'
+    + '<div class="card" mx-auto>'
+    + '<div class="card-body">'
+    + '<h4 class="card-title">' + jobTitle + '</h4>'
+    + '<p class="card-text" style="padding-top: 3rem;">' + jobDesc + '</p>'
+    //email of course will be modified later to be only visible when employer hires a student 
+    //otherwise nobody can see it
+    + '<p class="card-text-owner">' + requestedBy + '</p>'
+    + '</div>'
+    + '</div>'
+    + '</div>');
+  */
+  console.log("posted.");
+}
+
 function displayJob(jobTitle, jobDesc, requestedBy) {
   console.log("displayJob()");
   console.log("user: " + requestedBy);
@@ -314,6 +359,84 @@ function displayJob(jobTitle, jobDesc, requestedBy) {
     + '</div>'
     + '</div>');
   console.log("posted.");
+}
+
+function getJobsByCategory(desiredcategory) {
+  console.log('getJobsByCategory()');
+  var jobsRef = firebase.database().ref('Jobs');
+  var jobPostsSection = document.getElementById('jobPost-row');
+
+  //clear out the dummy element
+  //$("#job-card").remove();
+  //$("#jobPost-row").empty();
+
+
+  var fetchPosts = function (postsRef, sectionElement) {
+
+    postsRef.on('child_added', function (data) {
+      console.log("child added: ");
+      console.log(JSON.stringify(data.val(), null, '  '));
+
+      /*
+      {
+        "department_id": "pet",
+        "jobDescription": "My puppies need to be walked every Tuesday at 6 PM",
+        "jobName": "Walk 2 Dogs",
+        "jobPicture": "https://firebasestorage.googleapis.com/v0/b/laborless-6d04f.appspot.com/o/dogs.jpg?alt=media&token=59606a5b-687f-49b1-82e2-f9583fc105f7",
+        "requestedBy": "y0ixAWrVCSbCsKH2rvCcn7dQAeC3",
+        "status": "incomplete"
+      }
+      */
+
+      var uid = firebase.auth().currentUser.uid;
+      var requestedBy = data.val().requestedBy;
+      var jobcategory = data.val().department_id;
+
+      if (jobcategory === desiredcategory) {
+        console.log("Found a job in this category.");
+        var jobTitle = data.val().jobName; //$("#job-title").val();
+        var jobDesc = data.val().jobDescription; //$("#job-description").val();
+        //displayJob(jobTitle, jobDesc, requestedBy);
+
+        firebase.database().ref('users/' + uid).once('value').then(function (snapshot) {
+          console.log("1. requested by: " + requestedBy);
+          requestedBy = snapshot.val().username;
+          console.log("2. requested by: " + requestedBy);
+          console.log("3. requested by: " + requestedBy);
+
+          var status = data.val().status;
+          var jobPicture = data.val().jobPicture;
+          var department_id = data.val().department_id;
+
+          displayJobToStudent(jobTitle, jobDesc, requestedBy);
+          $("#job-card-dyn").show();
+
+        });
+        //return firebase.database().ref('/users/' + userId).once('value').then(function (snapshot) {
+        //  var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+        //requestedBy = firebase.auth().currentUser.username;
+
+
+      }
+
+    });
+    postsRef.on('child_changed', function (data) {
+      console.log("child changed");
+    });
+    postsRef.on('child_removed', function (data) {
+      console.log("child removed");
+    });
+
+  };
+
+  // Fetching and displaying all posts of each sections.
+  console.log("fetching jobs");
+  fetchPosts(jobsRef, jobPostsSection);
+
+  $("#jobPost-row").remove("#job-card");
+
+  // Keep track of all Firebase refs we are listening to.
+  listeningFirebaseRefs.push(jobsRef);
 }
 
 function getMyJobs() {
@@ -943,6 +1066,21 @@ function initApp() {
   //window.location.pathname === "/") {
   if (endsWith(window.location.pathname, "myJobs.html")) {
     getMyJobs();
+  }
+
+
+  //department_id can be: house, auto, pet, cleaning
+  else if (endsWith(window.location.pathname, "studentHome.html")) {
+    getJobsByCategory("house");
+  }
+  else if (endsWith(window.location.pathname, "studentCar.html")) {
+    getJobsByCategory("auto");
+  }
+  else if (endsWith(window.location.pathname, "studentClean.html")) {
+    getJobsByCategory("cleaning");
+  }
+  else if (endsWith(window.location.pathname, "studentPets.html")) {
+    getJobsByCategory("pet");
   }
 
 }
