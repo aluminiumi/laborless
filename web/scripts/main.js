@@ -305,13 +305,13 @@ function displayJobToStudent(jobTitle, jobDesc, requestedBy, departmentid) {
   var card = '<div class="card">';
   //department_id can be: house, auto, pet, cleaning
   if (departmentid == "house") {
-    card += '<img class="card-img-top" src="img/house.jpg" alt="home-image">';
+    card += '<img class="card-img-top" src="/img/house.jpg" alt="home-image">';
   } else if (departmentid == "auto") {
-    card += '<img class="card-img-top" src="img/auto.jpg" alt="auto-image">';
+    card += '<img class="card-img-top" src="/img/auto.jpg" alt="auto-image">';
   } else if (departmentid == "pet") {
-    card += '<img class="card-img-top" src="img/pet.jpg" alt="pet-image">';
+    card += '<img class="card-img-top" src="/img/pet.jpg" alt="pet-image">';
   } else if (departmentid == "cleaning") {
-    card += '<img class="card-img-top" src="img/cleaning.jpg" alt="clean-image">';
+    card += '<img class="card-img-top" src="/img/cleaning.jpg" alt="clean-image">';
   }
 
   card +=
@@ -343,10 +343,11 @@ function displayJobToStudent(jobTitle, jobDesc, requestedBy, departmentid) {
   console.log("posted.");
 }
 
-function displayJob(jobTitle, jobDesc, requestedBy) {
+function displayJob(jobTitle, jobDesc, jobCat, requestedBy) {
   console.log("displayJob()");
   console.log("user: " + requestedBy);
   //append new job as first child
+  /* Old version 
   $('#jobPost-row').prepend('<div id=job-card class="col-lg-3 col-md-6 col-sm-12">'
     + '<div class="card" mx-auto>'
     + '<div class="card-body">'
@@ -358,6 +359,33 @@ function displayJob(jobTitle, jobDesc, requestedBy) {
     + '</div>'
     + '</div>'
     + '</div>');
+    */
+
+   var card = '<div class="card" mx-auto>';
+   //department_id can be: house, auto, pet, cleaning
+   if (jobCat == "house") {
+     card += '<img class="card-img-top" src="/img/house.jpg" alt="home-image">';
+   } else if (jobCat == "auto") {
+     card += '<img class="card-img-top" src="/img/auto.jpg" alt="auto-image">';
+   } else if (jobCat == "pet") {
+     card += '<img class="card-img-top" src="/img/pet.jpg" alt="pet-image">';
+   } else if (jobCat == "cleaning") {
+     card += '<img class="card-img-top" src="/img/cleaning.jpg" alt="clean-image">';
+   }
+ 
+   card +=
+        '<div class="card-body">' +
+          '<h4 class="card-title">' + jobTitle + '</h4>' +
+          '<p class="card-text" style="padding-top: 1rem;">' + jobDesc + '</p>' +
+        '</div>' +
+        '<div class="card-options">' +
+          '<span data-toggle="tooltip" data-placement="bottom" title="Delete Post"><i class="fas fa-trash-alt option-icon"></i></span>' +
+          '<span data-toggle="modal" data-placement="bottom" data-target="#hiringModal"><a data-toggle="tooltip" data-placement="bottom" title="See who is interested" class="fas fa-eye option-icon"></a></span>' +
+          '<span data-toggle="tooltip" data-placement="bottom" title="Job Completed"><i class="fas fa-check-circle option-icon"></i></span>' +
+        '</div>' +
+    '</div>';
+
+  $('#jobPost-row').prepend(card);
   console.log("posted.");
 }
 
@@ -399,16 +427,13 @@ function getJobsByCategory(desiredcategory) {
         //displayJob(jobTitle, jobDesc, requestedBy);
 
         firebase.database().ref('users/' + uid).once('value').then(function (snapshot) {
-          console.log("1. requested by: " + requestedBy);
           requestedBy = snapshot.val().username;
-          console.log("2. requested by: " + requestedBy);
-          console.log("3. requested by: " + requestedBy);
 
           var status = data.val().status;
           var jobPicture = data.val().jobPicture;
           var department_id = data.val().department_id;
 
-          displayJobToStudent(jobTitle, jobDesc, requestedBy);
+          displayJobToStudent(jobTitle, jobDesc, requestedBy, department_id);
           $("#job-card-dyn").show();
 
         });
@@ -476,16 +501,13 @@ function getMyJobs() {
         //displayJob(jobTitle, jobDesc, requestedBy);
 
         firebase.database().ref('users/' + uid).once('value').then(function (snapshot) {
-          console.log("1. requested by: " + requestedBy);
           requestedBy = snapshot.val().username;
-          console.log("2. requested by: " + requestedBy);
-          console.log("3. requested by: " + requestedBy);
 
           var status = data.val().status;
           var jobPicture = data.val().jobPicture;
           var department_id = data.val().department_id;
 
-          displayJob(jobTitle, jobDesc, requestedBy);
+          displayJob(jobTitle, jobDesc, department_id, requestedBy);
           $("#job-card-dyn").show();
 
         });
@@ -825,7 +847,7 @@ function onAuthStateChanged(user) {
       window.location.pathname === "/") {
       if (endsWith(email, "@ttu.edu")) {
         console.log("ttu email address");
-        
+
         //check background check status
         firebase.database().ref('users/' + currentUID).once('value').then(function (snapshot) {
           var bgcstatus = snapshot.val().backgroundCheckStatus;
