@@ -298,9 +298,29 @@ function deleteComment(postElement, id) {
   comment.parentElement.removeChild(comment);
 }
 
+function electForJob(jobid) {
+  console.log("electForJob(" + jobid + ")");
+  if (firebase.auth().currentUser) {
+    var currentUID = firebase.auth().currentUser.uid;
+    console.log(currentUID);
+    /*var postData = {
+      jobName: document.getElementById('job-title').value,
+      jobDescription: document.getElementById('job-description').value,
+      status: "incomplete",
+      requestedBy: firebase.auth().currentUser.uid,
+      department_id: departmentid
+    };*/
+  
+    //get a key for a new post 
+    var newPostKey = firebase.database().ref().child('posts').push().key;
+  
+    var updates = {};
+    updates['/Jobs/' + jobid + '/queuedWorkers/' + newPostKey] = currentUID;
+    return firebase.database().ref().update(updates);
+  }
+}
 
-
-function displayJobToStudent(jobTitle, jobDesc, requestedBy, departmentid) {
+function displayJobToStudent(jobTitle, jobDesc, requestedBy, departmentid, jobid) {
   console.log("displayJobToStudent()");
   console.log("user: " + requestedBy);
   firebase.database().ref('users/' + requestedBy).once('value').then(function (snapshot) {
@@ -333,7 +353,10 @@ function displayJobToStudent(jobTitle, jobDesc, requestedBy, departmentid) {
         '  >' +
         '    <i class="fas fa-address-card option-icon"></i>' +
         '</span>' +
-        '<button type="button" class="btn btn-outline-primary px-4">Elect</button>' +
+        '<button ' +
+        '  type="button" ' +
+        '  onclick="electForJob(\'' + jobid + '\')" ' +
+        '  class="btn btn-outline-primary px-4">Elect</button>' +
         '</div>' +
         '</div>';
 
@@ -445,7 +468,7 @@ function createProfileModal(requestedBy, idnum) {
 function showProfileModal(requestedBy) {
   console.log("showProfileModal(" + requestedBy + ")");
   var profilemodal = document.getElementById('exampleModalLongTitle');
-  profilemodal.innerText = requestedBy+"\'s Profile";
+  profilemodal.innerText = requestedBy + "\'s Profile";
 }
 
 /*
@@ -471,6 +494,7 @@ function getJobsByCategory(desiredcategory) {
 
     postsRef.on('child_added', function (data) {
       console.log("child added: ");
+      console.log(data.key);
       console.log(JSON.stringify(data.val(), null, '  '));
 
       /*
@@ -504,7 +528,7 @@ function getJobsByCategory(desiredcategory) {
           var department_id = data.val().department_id;
 
           //createProfileModal(requestedBy, profileid);
-          displayJobToStudent(jobTitle, jobDesc, requestedBy, department_id);
+          displayJobToStudent(jobTitle, jobDesc, requestedBy, department_id, data.key);
           username = null;
           $("#job-card-dyn").show();
 
