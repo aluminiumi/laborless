@@ -445,7 +445,7 @@ function createProfileModal(requestedBy, idnum) {
 function showProfileModal(requestedBy) {
   console.log("showProfileModal(" + requestedBy + ")");
   var profilemodal = document.getElementById('exampleModalLongTitle');
-  profilemodal.innerText = requestedBy;
+  profilemodal.innerText = requestedBy+"\'s Profile";
 }
 
 /*
