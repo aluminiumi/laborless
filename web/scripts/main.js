@@ -122,7 +122,20 @@ function electForJob(jobid) {
   
     var updates = {};
     updates['/Jobs/' + jobid + '/queuedWorkers/' + newPostKey] = currentUID;
-    return firebase.database().ref().update(updates);
+    firebase.database().ref().update(updates);
+
+    if (endsWith(window.location.pathname, "studentCar.html")) {
+      window.location = '/studentPage/studentCar.html';
+    }
+    else if (endsWith(window.location.pathname, "studentClean.html")) {
+      window.location = '/studentPage/studentClean.html';
+    }
+    else if (endsWith(window.location.pathname, "studentHome.html")) {
+      window.location = '/studentPage/studentHome.html';
+    }
+    else if (endsWith(window.location.pathname, "studentPets.html")) {
+      window.location = '/studentPage/studentPets.html';
+    }
   }
 }
 
@@ -408,13 +421,45 @@ function getJobsByCategory(desiredcategory) {
 
           console.log("username: " + username);
           var status = data.val().status;
-          var jobPicture = data.val().jobPicture;
-          var department_id = data.val().department_id;
 
-          //createProfileModal(requestedBy, profileid);
-          displayJobToStudent(jobTitle, jobDesc, requestedBy, department_id, data.key);
-          username = null;
-          $("#job-card-dyn").show();
+          //only show incomplete jobs
+          if(status === "incomplete") {
+            var jobPicture = data.val().jobPicture;
+            var department_id = data.val().department_id;
+
+            var fetchWorkers = function (workersRef, jobid) {
+              var workers = [];
+              workersRef.on('child_added', function (data) {
+                console.log("worker child added: ");
+                console.log(data.key);
+                console.log(JSON.stringify(data.val(), null, '  '));
+
+                //clean up previous sloppiness
+                //check if worker already exists in our array; if so, remove it from db and fail to push
+                console.log("location of this worker in our array: "+workers.indexOf(data.val()));
+                if(workers.indexOf(data.val()) == -1) {
+                  console.log("worker is new; adding");
+                  workers.push(data.val());
+                } else {
+                  console.log("worker is a duplicate; removing");
+                  removeWorkerKeyFromJob(data.key, jobid);
+                }
+              });
+              return workers;
+            };
+
+            var workersRef = firebase.database().ref('Jobs/' + data.key + "/queuedWorkers");
+            var workers = fetchWorkers(workersRef, data.key);
+
+            for(var i=0; i<workers.length; i++) {
+              console.log("workers: " + workers);
+            }
+  
+            displayJobToStudent(jobTitle, jobDesc, requestedBy, department_id, data.key);
+            username = null;
+            $("#job-card-dyn").show();
+          }
+          
 
         });
 
@@ -446,6 +491,18 @@ function getJobsByCategory(desiredcategory) {
   listeningFirebaseRefs.push(jobsRef);
 }
 
+
+
+/**
+ * Used to remove duplicate workers in worker queue
+ * 
+ * @param {*} workerkey 
+ * @param {*} jobid 
+ */
+function removeWorkerKeyFromJob(workerkey, jobid) {
+  console.log("removeWorkerFromJob("+workerkey+", "+jobid+")");
+  firebase.database().ref('Jobs/'+jobid+'/queuedWorkers').child(workerkey).remove();
+}
 
 
 
