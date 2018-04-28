@@ -225,7 +225,7 @@ function displayJobToEmployer(jobTitle, jobDesc, jobCat, requestedBy) {
     + '</div>');
     */
 
-  var card = '<div class="card" mx-auto>';
+  var card = '<div class="card" max-width="256px">';
   //department_id can be: house, auto, pet, cleaning
   if (jobCat == "house") {
     card += '<img class="card-img-top" src="/img/house.jpg" alt="home-image">';
@@ -373,8 +373,10 @@ function getJobsByCategory(desiredcategory) {
 /**
  * Called by initApp when employer is on myJobs.html
  * Loads the jobs posted by that user
+ * 
+ *  * @param {*} showCompletedOnly If true, only show completed jobs; If false, show only incomplete.
  */
-function getMyJobs() {
+function getMyJobs(showCompletedOnly) {
   console.log('getMyJobs()');
   var jobsRef = firebase.database().ref('Jobs');
   var jobPostsSection = document.getElementById('jobPost-row');
@@ -414,6 +416,7 @@ function getMyJobs() {
           requestedBy = snapshot.val().username;
 
           var status = data.val().status;
+          console.log("status: "+status);
           var jobPicture = data.val().jobPicture;
           var department_id = data.val().department_id;
 
@@ -804,7 +807,10 @@ function initApp() {
 
   //load list of jobs on employer jobs page
   if (endsWith(window.location.pathname, "myJobs.html")) {
-    getMyJobs();
+    getMyJobs(false);
+  }
+  else if (endsWith(window.location.pathname, "completedJobs.html")) {
+    getMyJobs(true);
   }
 
   //load available jobs based on category for students viewing categories
