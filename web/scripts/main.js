@@ -298,55 +298,72 @@ function deleteComment(postElement, id) {
   comment.parentElement.removeChild(comment);
 }
 
+
+
 function displayJobToStudent(jobTitle, jobDesc, requestedBy, departmentid) {
-  console.log("displayJob()");
+  console.log("displayJobToStudent()");
   console.log("user: " + requestedBy);
+  firebase.database().ref('users/' + requestedBy).once('value').then(function (snapshot) {
+    if (snapshot.val()) {
+      var username = snapshot.val().username;
 
-  var card = '<div class="card">';
-  //department_id can be: house, auto, pet, cleaning
-  if(departmentid == "house") {
-    card +='<img class="card-img-top" src="img/house.jpg" alt="home-image">';
-  } else if (departmentid == "auto") {
-    card += '<img class="card-img-top" src="img/auto.jpg" alt="auto-image">';
-  } else if (departmentid == "pet") {
-    card += '<img class="card-img-top" src="img/pet.jpg" alt="pet-image">';
-  } else if (departmentid == "cleaning") {
-    card += '<img class="card-img-top" src="img/cleaning.jpg" alt="clean-image">';
-  }
+      var card = '<div class="card">';
+      //department_id can be: house, auto, pet, cleaning
+      if (departmentid == "house") {
+        card += '<img class="card-img-top" src="/img/house.jpg" alt="home-image">';
+      } else if (departmentid == "auto") {
+        card += '<img class="card-img-top" src="/img/auto.jpg" alt="auto-image">';
+      } else if (departmentid == "pet") {
+        card += '<img class="card-img-top" src="/img/pet.jpg" alt="pet-image">';
+      } else if (departmentid == "cleaning") {
+        card += '<img class="card-img-top" src="/img/cleaning.jpg" alt="clean-image">';
+      }
 
-  card +=
-  '<div class="card-body">' +
-    '<h5 class="card-title">' + jobTitle + '</h5>' +
-    '<p class="card-text">' + jobDesc + '</p>' +
-    '<span data-target="#exampleUserProfile" data-toggle="modal" data-toggle="tooltip" data-placement="bottom" title="View User Profile"><i class="fas fa-address-card option-icon"></i></span>' +
-    '<button type="button" class="btn btn-outline-primary px-4">Elect</button>' +
-  '</div>' +
-'</div>';
+      card +=
+        '<div class="card-body">' +
+        '<h5 class="card-title">' + jobTitle + '</h5>' +
+        '<p class="card-text">' + jobDesc + '</p>' +
+        '<span ' +
+        '  data-target="#exampleUserProfile" ' +
+        '  data-toggle="modal" ' +
+        '  data-toggle="tooltip" ' +
+        '  data-placement="bottom" ' +
+        '  onclick="showProfileModal(\'' + username + '\');"' +
+        '  title="View User Profile" ' +
+        '  >' +
+        '    <i class="fas fa-address-card option-icon"></i>' +
+        '</span>' +
+        '<button type="button" class="btn btn-outline-primary px-4">Elect</button>' +
+        '</div>' +
+        '</div>';
 
-  //append new job as first child
-  $('#jobPost-row').prepend(card);
-    
-    
-    
-  /*  '<div id=job-card class="col-lg-3 col-md-6 col-sm-12">'
-    + '<div class="card" mx-auto>'
-    + '<div class="card-body">'
-    + '<h4 class="card-title">' + jobTitle + '</h4>'
-    + '<p class="card-text" style="padding-top: 3rem;">' + jobDesc + '</p>'
-    //email of course will be modified later to be only visible when employer hires a student 
-    //otherwise nobody can see it
-    + '<p class="card-text-owner">' + requestedBy + '</p>'
-    + '</div>'
-    + '</div>'
-    + '</div>');
-  */
-  console.log("posted.");
+      //append new job as first child
+      $('#jobPost-row').prepend(card);
+
+      /*  '<div id=job-card class="col-lg-3 col-md-6 col-sm-12">'
+        + '<div class="card" mx-auto>'
+        + '<div class="card-body">'
+        + '<h4 class="card-title">' + jobTitle + '</h4>'
+        + '<p class="card-text" style="padding-top: 3rem;">' + jobDesc + '</p>'
+        //email of course will be modified later to be only visible when employer hires a student 
+        //otherwise nobody can see it
+        + '<p class="card-text-owner">' + requestedBy + '</p>'
+        + '</div>'
+        + '</div>'
+        + '</div>');
+      */
+      console.log("posted.");
+    }
+  });
 }
 
-function displayJob(jobTitle, jobDesc, requestedBy) {
+
+
+function displayJob(jobTitle, jobDesc, jobCat, requestedBy) {
   console.log("displayJob()");
   console.log("user: " + requestedBy);
   //append new job as first child
+  /* Old version 
   $('#jobPost-row').prepend('<div id=job-card class="col-lg-3 col-md-6 col-sm-12">'
     + '<div class="card" mx-auto>'
     + '<div class="card-body">'
@@ -358,8 +375,86 @@ function displayJob(jobTitle, jobDesc, requestedBy) {
     + '</div>'
     + '</div>'
     + '</div>');
+    */
+
+  var card = '<div class="card" mx-auto>';
+  //department_id can be: house, auto, pet, cleaning
+  if (jobCat == "house") {
+    card += '<img class="card-img-top" src="/img/house.jpg" alt="home-image">';
+  } else if (jobCat == "auto") {
+    card += '<img class="card-img-top" src="/img/auto.jpg" alt="auto-image">';
+  } else if (jobCat == "pet") {
+    card += '<img class="card-img-top" src="/img/pet.jpg" alt="pet-image">';
+  } else if (jobCat == "cleaning") {
+    card += '<img class="card-img-top" src="/img/cleaning.jpg" alt="clean-image">';
+  }
+
+  card +=
+    '<div class="card-body">' +
+    '<h4 class="card-title">' + jobTitle + '</h4>' +
+    '<p class="card-text" style="padding-top: 1rem;">' + jobDesc + '</p>' +
+    '</div>' +
+    '<div class="card-options">' +
+    '<span data-toggle="tooltip" data-placement="bottom" title="Delete Post"><i class="fas fa-trash-alt option-icon"></i></span>' +
+    '<span data-toggle="modal" data-placement="bottom" data-target="#hiringModal"><a data-toggle="tooltip" data-placement="bottom" title="See who is interested" class="fas fa-eye option-icon"></a></span>' +
+    '<span data-toggle="tooltip" data-placement="bottom" title="Job Completed"><i class="fas fa-check-circle option-icon"></i></span>' +
+    '</div>' +
+    '</div>';
+
+  $('#jobPost-row').prepend(card);
   console.log("posted.");
 }
+
+/*
+function createProfileModal(requestedBy, idnum) {
+  console.log("createProfileModal("+requestedBy+", "+idnum+")");
+  var profilemodal = '' +
+  '<div class="modal fade" id="profile'+idnum+'" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">' +
+  '<div class="modal-dialog modal-dialog-centered" role="document">' +
+    '<div class="modal-content">' +
+      '<div class="modal-header">' +
+        '<h5 class="modal-title" id="exampleModalLongTitle"><i>'+requestedBy+'</i>\'s Profile</h5>' +
+        '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+          '<span aria-hidden="true">&times;</span>' +
+        '</button>' +
+      '</div>' +
+      '<div class="modal-body">' +
+        '<img src="img/silhouette.jpg" class="rounded mx-auto mb-5 d-block" alt="user-image">' +
+        '<h5>Knowledge</h5>' +
+        '<div class="progress my-2">' +
+          '<div class="progress-bar-custom" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>' +
+        '</div>' +
+        '<h5>Professionalism</h5>' +
+        '<div class="progress my-2">' +
+          '<div class="progress-bar-custom" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>' +
+        '</div>' +
+        '<h5>Affordability</h5>' +
+        '<div class="progress my-2">' +
+          '<div class="progress-bar-custom" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="modal-footer">' +
+        '<button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>' +
+      '</div>' +
+    '</div>' +
+  '</div>' +
+  '</div>';
+  document.getElementById('exampleUserProfile').innerHTML = profilemodal;
+}*/
+
+function showProfileModal(requestedBy) {
+  console.log("showProfileModal(" + requestedBy + ")");
+  var profilemodal = document.getElementById('exampleModalLongTitle');
+  profilemodal.innerText = requestedBy+"\'s Profile";
+}
+
+/*
+function getUsernameOfId(uid) {
+  firebase.database().ref('users/' + uid).once('value').then(function (snapshot) {
+    var username = snapshot.val().username;
+    return username;
+  });
+}*/
 
 function getJobsByCategory(desiredcategory) {
   console.log('getJobsByCategory()');
@@ -369,6 +464,7 @@ function getJobsByCategory(desiredcategory) {
   //clear out the dummy element
   //$("#job-card").remove();
   //$("#jobPost-row").empty();
+  var profileid = 0;
 
 
   var fetchPosts = function (postsRef, sectionElement) {
@@ -393,25 +489,28 @@ function getJobsByCategory(desiredcategory) {
       var jobcategory = data.val().department_id;
 
       if (jobcategory === desiredcategory) {
+        profileid++;
         console.log("Found a job in this category.");
         var jobTitle = data.val().jobName; //$("#job-title").val();
         var jobDesc = data.val().jobDescription; //$("#job-description").val();
         //displayJob(jobTitle, jobDesc, requestedBy);
 
         firebase.database().ref('users/' + uid).once('value').then(function (snapshot) {
-          console.log("1. requested by: " + requestedBy);
-          requestedBy = snapshot.val().username;
-          console.log("2. requested by: " + requestedBy);
-          console.log("3. requested by: " + requestedBy);
+          var username = snapshot.val().username;
 
+          console.log("username: " + username);
           var status = data.val().status;
           var jobPicture = data.val().jobPicture;
           var department_id = data.val().department_id;
 
-          displayJobToStudent(jobTitle, jobDesc, requestedBy);
+          //createProfileModal(requestedBy, profileid);
+          displayJobToStudent(jobTitle, jobDesc, requestedBy, department_id);
+          username = null;
           $("#job-card-dyn").show();
 
         });
+
+        //requestedBy = null;
         //return firebase.database().ref('/users/' + userId).once('value').then(function (snapshot) {
         //  var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
         //requestedBy = firebase.auth().currentUser.username;
@@ -476,16 +575,13 @@ function getMyJobs() {
         //displayJob(jobTitle, jobDesc, requestedBy);
 
         firebase.database().ref('users/' + uid).once('value').then(function (snapshot) {
-          console.log("1. requested by: " + requestedBy);
           requestedBy = snapshot.val().username;
-          console.log("2. requested by: " + requestedBy);
-          console.log("3. requested by: " + requestedBy);
 
           var status = data.val().status;
           var jobPicture = data.val().jobPicture;
           var department_id = data.val().department_id;
 
-          displayJob(jobTitle, jobDesc, requestedBy);
+          displayJob(jobTitle, jobDesc, department_id, requestedBy);
           $("#job-card-dyn").show();
 
         });
@@ -589,9 +685,9 @@ function handleStudentPageData() {
   var uid = firebase.auth().currentUser.uid;
   firebase.database().ref('users/' + uid).once('value').then(function (snapshot) {
     var username = snapshot.val().username;
-    console.log("username: "+username);
+    console.log("username: " + username);
 
-    document.getElementById('greeting').textContent = "Hi "+username+"!";
+    document.getElementById('greeting').textContent = "Hi " + username + "!";
 
     //displayJob(jobTitle, jobDesc, requestedBy);
     //$("#job-card-dyn").show();
@@ -825,7 +921,17 @@ function onAuthStateChanged(user) {
       window.location.pathname === "/") {
       if (endsWith(email, "@ttu.edu")) {
         console.log("ttu email address");
-        window.location = "/studentPage/studentPage.html";
+
+        //check background check status
+        firebase.database().ref('users/' + currentUID).once('value').then(function (snapshot) {
+          var bgcstatus = snapshot.val().backgroundCheckStatus;
+          console.log("bgcstatus: " + bgcstatus);
+          if (bgcstatus === "passed") { //student passed background check
+            window.location = "/studentPage/studentPage.html";
+          } else {
+            window.location = "/studentPage/studentBlock.html";
+          }
+        });
       } else {
         console.log("not ttu email address");
         window.location = "/employerPage/employerPage.html";
@@ -1083,6 +1189,21 @@ function initApp() {
     getJobsByCategory("pet");
   }
 
+
+  else if (endsWith(window.location.pathname, "studentBlock.html")) {
+    if (firebase.auth().currentUser) {
+      var currentUID = firebase.auth().currentUser.uid;
+      firebase.database().ref('users/' + currentUID).once('value').then(function (snapshot) {
+        var bgcstatus = snapshot.val().backgroundCheckStatus;
+        console.log("bgcstatus: " + bgcstatus);
+        if (bgcstatus === "passed") { //student passed background check
+          window.location = "/studentPage/studentPage.html";
+        }
+      });
+    } else { //not logged in
+      //window.location = "/";
+    }
+  }
 }
 
 
