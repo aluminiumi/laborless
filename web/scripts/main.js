@@ -1141,7 +1141,7 @@ function sendEmailVerification() {
 }
 
 function sendPasswordReset() {
-  var email = document.getElementById('email').value;
+  var email = document.getElementById('emailInput').value;
   firebase.auth().sendPasswordResetEmail(email).then(function () {
     // Password Reset Email Sent!
     // [START_EXCLUDE]
