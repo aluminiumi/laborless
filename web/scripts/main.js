@@ -307,7 +307,7 @@ function displayJobToEmployer(jobTitle, jobDesc, jobCat, requestedBy, jobid, sho
       '          <a data-toggle="tooltip" ' +
       '             data-placement="bottom" ' +
       '             title="See who is interested" ' +
-      '             onclick="showWorkerQueueModal(\'' + workers + '\');"' +
+      '             onclick="showWorkerQueueModal(\'' + workers + '\', \'' + jobid + '\');"' +
       '             class="fas fa-eye option-icon"> ' +
       '          </a> ' +
       '</span>' +
@@ -329,9 +329,14 @@ function displayJobToEmployer(jobTitle, jobDesc, jobCat, requestedBy, jobid, sho
 
 
 
-
-function showWorkerQueueModal(workers) {
+/**
+ * This function creates the list of workers queued for each job.
+ * It is used by the employer myJobs.html
+ * @param {*} workers The list of workers queued for the selected job
+ */
+function showWorkerQueueModal(workers, jobid) {
   console.log("showWorkerQueueModal(" + workers + ")");
+  console.log("jobid: "+jobid);
   //var profilemodal = document.getElementById('student-username');
   //profilemodal.innerText = workers;
 
@@ -349,30 +354,66 @@ function showWorkerQueueModal(workers) {
   //$('#hiringModalContent').remove()
 
 
-  for (var i = 0; i < workers.length; i++) {
-    getUsernameOfId(workers[i]).then(function (username) {
+  var listWithUsername = function(workerid, jobid) { 
+    getUsernameOfId(workerid).then(function (username) {
       if (username) {
-        console.log(username);
+        console.log("username: " + username);
+        console.log("workerid: " + workerid);
+        console.log("jobid: "+jobid);
         var entry = '' +
           '<div class="modal-body"> ' +
-          '<a href="#" id="student-username" data-toggle="modal" data-target="#studentInfo" data-dismiss="modal" style="color:black !important; font-size:1.2rem !important">' +
+          '<a href="#" ' +
+          '   id="student-username" ' +
+          '   data-toggle="modal" ' +
+          '   data-target="#studentInfo" ' +
+          '   data-dismiss="modal" ' +
+          '   onclick="showWorkerProfile(\'' + workerid + '\', \'' + username + '\', \'' + jobid + '\');"' +
+          '   style="color:black !important; font-size:1.2rem !important">' +
           username
         '</a> ' +
           '</div>';
         $('#hiringModalContent').append(entry);
       } else {
         var entry = '' +
-        '<div class="modal-body"> ' +
-        'No users have elected to do this job, yet.' +
-        '</div>';
+          '<div class="modal-body"> ' +
+          'No users have elected to do this job, yet.' +
+          '</div>';
         $('#hiringModalContent').append(entry);
       }
     });
-  }
+    
+  }    
 
+  for (var i = 0; i < workers.length; i++) {
+    listWithUsername(workers[i], jobid);
+  }
 }
 
 
+
+function showWorkerProfile(workerid, username, jobid) {
+  console.log("showWorkerProfile(" + workerid + ")");
+  var profilemodal = document.getElementById('exampleModalLongTitle');
+  profilemodal.innerText = username + "\'s Information";
+  //var selectbtn = document.getElementById('selectUserBtn');
+  var footer = document.getElementById('studentInfoModalFooter');
+  footer.innerHTML = '' +
+    '<button id="selectUserBtn" ' +
+    '        type="button" ' +
+    '        onclick="selectUserForJob(\''+workerid+ '\',\'' + jobid + '\')" ' +
+    '        class="btn btn-outline-primary"> ' +
+    'Select' +
+    '</button>';
+  //selectbtn.addEventListener('click', selectUserForJob(workerid, jobid), false);
+}
+
+
+function selectUserForJob(workerid, jobid) {
+  console.log("selectUserForJob("+workerid+", "+jobid+")");
+  var updates = {};
+  updates['/Jobs/' + jobid + "/completedBy"] = workerid;
+  return firebase.database().ref().update(updates);
+}
 
 
 function getUsernameOfId(uid) {
