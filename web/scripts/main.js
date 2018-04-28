@@ -198,7 +198,23 @@ function displayJobToStudent(jobTitle, jobDesc, requestedBy, departmentid, jobid
 
 
 
-function displayCompletedJobToEmployer(jobTitle, jobDesc, jobCat, requestedBy) {
+
+function deleteJob(jobid) {
+  firebase.database().ref('Jobs').child(jobid).remove();
+
+  if (endsWith(window.location.pathname, "myJobs.html")) {
+    window.location = '/employerPage/myJobs.html';
+  }
+  else if (endsWith(window.location.pathname, "completedJobs.html")) {
+    window.location = '/employerPage/completedJobs.html';
+  }
+}
+
+
+
+
+
+function displayCompletedJobToEmployer(jobTitle, jobDesc, jobCat, requestedBy, jobid) {
   console.log("displayCompletedJobToEmployer()");
   console.log("user: " + requestedBy);
   //append new job as first child
@@ -221,7 +237,12 @@ function displayCompletedJobToEmployer(jobTitle, jobDesc, jobCat, requestedBy) {
     '<p class="card-text" style="padding-top: 1rem;">' + jobDesc + '</p>' +
     '</div>' +
     '<div class="card-options">' +
-    '<span data-toggle="tooltip" data-placement="bottom" title="Delete Post"><i class="fas fa-trash-alt option-icon"></i></span>' +
+    '<span data-toggle="tooltip" ' +
+    '    data-placement="bottom" ' +
+    '    onclick="deleteJob(\'' + jobid + '\');"' +
+    '    title="Delete Post"> '+
+    ' <i class="fas fa-trash-alt option-icon"></i> ' +
+    '</span>' +
     '<span data-toggle="tooltip" data-placement="bottom" title="Student Hired"><i class="fas fa-eye option-icon"></i></span> ' +
     '</div>' +
     '</div>';
@@ -238,8 +259,9 @@ function displayCompletedJobToEmployer(jobTitle, jobDesc, jobCat, requestedBy) {
  * @param {*} jobDesc 
  * @param {*} jobCat One of house, auto, pet, cleaning
  * @param {*} requestedBy Should be the employer's username
+ * @param {*} jobid The database key of the job
  */
-function displayIncompletedJobToEmployer(jobTitle, jobDesc, jobCat, requestedBy) {
+function displayIncompletedJobToEmployer(jobTitle, jobDesc, jobCat, requestedBy, jobid) {
   console.log("displayIncompletedJobToEmployer()");
   console.log("user: " + requestedBy);
   //append new job as first child
@@ -275,7 +297,12 @@ function displayIncompletedJobToEmployer(jobTitle, jobDesc, jobCat, requestedBy)
     '<p class="card-text" style="padding-top: 1rem;">' + jobDesc + '</p>' +
     '</div>' +
     '<div class="card-options">' +
-    '<span data-toggle="tooltip" data-placement="bottom" title="Delete Post"><i class="fas fa-trash-alt option-icon"></i></span>' +
+    '<span data-toggle="tooltip" ' +
+    '    data-placement="bottom" ' +
+    '    onclick="deleteJob(\'' + jobid + '\');"' +
+    '    title="Delete Post"> '+
+    ' <i class="fas fa-trash-alt option-icon"></i> ' +
+    '</span>' +
     '<span data-toggle="modal" data-placement="bottom" data-target="#hiringModal"><a data-toggle="tooltip" data-placement="bottom" title="See who is interested" class="fas fa-eye option-icon"></a></span>' +
     '<span data-toggle="tooltip" data-placement="bottom" title="Mark Job as Completed"><i class="fas fa-check-circle option-icon"></i></span>' +
     '</div>' +
@@ -455,12 +482,12 @@ function getMyJobs(showCompletedOnly) {
           if(showCompletedOnly) {
             if(status === "complete" ) {
               console.log("Found completed job by user");
-              displayCompletedJobToEmployer(jobTitle, jobDesc, department_id, requestedBy);
+              displayCompletedJobToEmployer(jobTitle, jobDesc, department_id, requestedBy, data.key);
             } 
           } else {
             if(status === "incomplete") {
               console.log("Found incomplete job by user");
-              displayIncompletedJobToEmployer(jobTitle, jobDesc, department_id, requestedBy);  
+              displayIncompletedJobToEmployer(jobTitle, jobDesc, department_id, requestedBy, data.key);  
             } 
           }
 
