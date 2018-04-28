@@ -125,16 +125,16 @@ function electForJob(jobid) {
     firebase.database().ref().update(updates);
 
     if (endsWith(window.location.pathname, "studentCar.html")) {
-      window.location = '/studentPage/studentCar.html';
+      window.location = '/studentPage/studentCategories/studentCar.html';
     }
     else if (endsWith(window.location.pathname, "studentClean.html")) {
-      window.location = '/studentPage/studentClean.html';
+      window.location = '/studentPage/studentCategories/studentClean.html';
     }
     else if (endsWith(window.location.pathname, "studentHome.html")) {
-      window.location = '/studentPage/studentHome.html';
+      window.location = '/studentPage/studentCategories/studentHome.html';
     }
     else if (endsWith(window.location.pathname, "studentPets.html")) {
-      window.location = '/studentPage/studentPets.html';
+      window.location = '/studentPage/studentCategories/studentPets.html';
     }
   }
 }
@@ -450,14 +450,18 @@ function getJobsByCategory(desiredcategory) {
 
             var workersRef = firebase.database().ref('Jobs/' + data.key + "/queuedWorkers");
             var workers = fetchWorkers(workersRef, data.key);
+            console.log("workers: "+ workers)
 
-            for(var i=0; i<workers.length; i++) {
-              console.log("workers: " + workers);
+            //check if this user is already queued for this job
+            if(workers.indexOf(currentUID) == -1) {
+              displayJobToStudent(jobTitle, jobDesc, requestedBy, department_id, data.key);
+              $("#job-card-dyn").show();
+            } else {
+              console.log("User has already elected to do this job.");
             }
   
-            displayJobToStudent(jobTitle, jobDesc, requestedBy, department_id, data.key);
-            username = null;
-            $("#job-card-dyn").show();
+  
+
           }
           
 
