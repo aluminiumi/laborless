@@ -687,7 +687,7 @@ function handleStudentPageData() {
     var username = snapshot.val().username;
     console.log("username: " + username);
 
-    document.getElementById('greeting').textContent = "Hi " + username + "!";
+    document.getElementById('greeting').textContent = "<h2>Hi " + username + "!</h2>";
 
     //$("#job-card-dyn").show();
 
