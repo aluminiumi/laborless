@@ -42,8 +42,13 @@ body{
   top: 5rem;
   height: auto;
   min-height: 30rem !important;
-  max-height: 30rem;
-  /**min-width: 10rem;*/
+  /*Height of card will be based on lenght of description so text and icons do not overflow from card structure*/
+  max-height: none;
+  /*The max-width of card corresponds to the same value from the '.card-img-top' class selector below so img and card have same
+    width. As well this forces the text to move down to the next lines*/
+  max-width: 20em !important;
+  /*Adding space between cards*/
+  margin-left: 1em;
 }
 
 .card-img-top {
