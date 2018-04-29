@@ -124,13 +124,6 @@ function electForJob(jobid) {
     updates['/Jobs/' + jobid + '/queuedWorkers/' + newPostKey] = currentUID;
     firebase.database().ref().update(updates);
 
-    newPostKey = firebase.database().ref().child('posts').push().key;
-
-    updates = {};
-    updates['/users/' + currentUID + '/approvedJobs/' + newPostKey] = jobid;
-    firebase.database().ref().update(updates);
-
-
     if (endsWith(window.location.pathname, "studentCar.html")) {
       window.location = '/studentPage/studentCategories/studentCar.html';
     }
@@ -405,8 +398,12 @@ function showWorkerProfile(workerid, username, jobid) {
   //var selectbtn = document.getElementById('selectUserBtn');
   var footer = document.getElementById('studentInfoModalFooter');
   footer.innerHTML = '' +
+  /*<button type="button" class="close" data-toggle="modal" data-target="#hiringModal" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>*/
     '<button id="selectUserBtn" ' +
     '        type="button" ' +
+    '        data-toggle="modal" data-target="#hiringModal" data-dismiss="modal" ' +
     '        onclick="selectUserForJob(\''+workerid+ '\',\'' + jobid + '\')" ' +
     '        class="btn btn-outline-primary"> ' +
     'Select' +
@@ -415,11 +412,26 @@ function showWorkerProfile(workerid, username, jobid) {
 }
 
 
+
+
+
+
 function selectUserForJob(workerid, jobid) {
   console.log("selectUserForJob("+workerid+", "+jobid+")");
   var updates = {};
   updates['/Jobs/' + jobid + "/completedBy"] = workerid;
+
+  var newPostKey = firebase.database().ref().child('posts').push().key;
+
+  updates = {};
+  updates['/users/' + workerid + '/approvedJobs/' + newPostKey] = jobid;
+  firebase.database().ref().update(updates);
+
+  $('#hiringModal').modal('hide');
+
   return firebase.database().ref().update(updates);
+
+
 }
 
 
