@@ -124,6 +124,13 @@ function electForJob(jobid) {
     updates['/Jobs/' + jobid + '/queuedWorkers/' + newPostKey] = currentUID;
     firebase.database().ref().update(updates);
 
+    newPostKey = firebase.database().ref().child('posts').push().key;
+
+    updates = {};
+    updates['/users/' + currentUID + '/approvedJobs/' + newPostKey] = jobid;
+    firebase.database().ref().update(updates);
+
+
     if (endsWith(window.location.pathname, "studentCar.html")) {
       window.location = '/studentPage/studentCategories/studentCar.html';
     }
