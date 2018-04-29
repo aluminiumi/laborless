@@ -403,7 +403,7 @@ function showWorkerProfile(workerid, username, jobid) {
                         </button>*/
     '<button id="selectUserBtn" ' +
     '        type="button" ' +
-    '        data-toggle="modal" data-target="#hiringModal" data-dismiss="modal" ' +
+    '        data-dismiss="modal" ' +
     '        onclick="selectUserForJob(\''+workerid+ '\',\'' + jobid + '\')" ' +
     '        class="btn btn-outline-primary"> ' +
     'Select' +
@@ -692,6 +692,101 @@ function getMyJobs(showCompletedOnly) {
   // Keep track of all Firebase refs we are listening to.
   listeningFirebaseRefs.push(jobsRef);
 }
+
+
+
+
+//TODO: finish this
+function getMyAcceptedJobs() {
+  console.log('getMyAcceptedJobs()');
+
+  /*
+  updates = {};
+  updates['/users/' + workerid + '/approvedJobs/' + newPostKey] = jobid;
+  */
+
+  var jobsRef = firebase.database().ref('/users/'+currentUID+'/approvedJobs');
+  var jobPostsSection = document.getElementById('jobPost-row');
+
+  //clear out the dummy element
+  //$("#job-card").remove();
+  //$("#jobPost-row").empty();
+
+
+  var fetchPosts = function (postsRef, sectionElement) {
+
+    postsRef.on('child_added', function (data) {
+      console.log("child added: ");
+      console.log(JSON.stringify(data.val(), null, '  '));
+
+      /*
+      {
+        "department_id": "pet",
+        "jobDescription": "My puppies need to be walked every Tuesday at 6 PM",
+        "jobName": "Walk 2 Dogs",
+        "jobPicture": "https://firebasestorage.googleapis.com/v0/b/laborless-6d04f.appspot.com/o/dogs.jpg?alt=media&token=59606a5b-687f-49b1-82e2-f9583fc105f7",
+        "requestedBy": "y0ixAWrVCSbCsKH2rvCcn7dQAeC3",
+        "status": "incomplete"
+      }
+      */
+
+      var uid = firebase.auth().currentUser.uid;
+      var requestedBy = data.val().requestedBy;
+
+      if (requestedBy === uid) {
+        console.log("Found a job by this user.");
+        var jobTitle = data.val().jobName; //$("#job-title").val();
+        var jobDesc = data.val().jobDescription; //$("#job-description").val();
+        //displayJob(jobTitle, jobDesc, requestedBy);
+
+        firebase.database().ref('users/' + uid).once('value').then(function (snapshot) {
+          requestedBy = snapshot.val().username;
+
+          var status = data.val().status;
+          console.log("status: " + status);
+          var jobPicture = data.val().jobPicture;
+          var department_id = data.val().department_id;
+
+          if ((showCompletedOnly && status === "complete") || (!showCompletedOnly && status === "incomplete")) {
+            var workersRef = firebase.database().ref('Jobs/' + data.key + "/queuedWorkers");
+            var workers = fetchWorkers(workersRef, data.key);
+            console.log("workers: " + workers)
+            displayJobToEmployer(jobTitle, jobDesc, department_id, requestedBy, data.key, showCompletedOnly, workers);
+          }
+
+
+          $("#job-card-dyn").show();
+
+        });
+        //return firebase.database().ref('/users/' + userId).once('value').then(function (snapshot) {
+        //  var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+        //requestedBy = firebase.auth().currentUser.username;
+
+
+      }
+
+    });
+    postsRef.on('child_changed', function (data) {
+      console.log("child changed");
+    });
+    postsRef.on('child_removed', function (data) {
+      console.log("child removed");
+    });
+
+  };
+
+  // Fetching and displaying all posts of each sections.
+  console.log("fetching jobs");
+  fetchPosts(jobsRef, jobPostsSection);
+
+  $("#jobPost-row").remove("#job-card");
+
+  // Keep track of all Firebase refs we are listening to.
+  listeningFirebaseRefs.push(jobsRef);
+}
+
+
+
 
 
 
@@ -1053,6 +1148,10 @@ function initApp() {
   }
   else if (endsWith(window.location.pathname, "completedJobs.html")) {
     getMyJobs(true);
+  }
+
+  else if (endsWith(window.location.pathname, "studentPage.html")) {
+    getMyAcceptedJobs();
   }
 
   //load available jobs based on category for students viewing categories
