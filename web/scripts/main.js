@@ -211,6 +211,60 @@ function displayJobToStudent(jobTitle, jobDesc, requestedBy, departmentid, jobid
 
 
 
+function displayAcceptedJobToStudent(jobTitle, jobDesc, requestedBy, departmentid, jobid) {
+  console.log("displayAcceptedJobToStudent()");
+  console.log("user: " + requestedBy);
+  firebase.database().ref('users/' + requestedBy).once('value').then(function (snapshot) {
+    if (snapshot.val()) {
+      var username = snapshot.val().username;
+      console.log(departmentid);
+
+      var card = '<div class="card">';
+      //department_id can be: house, auto, pet, cleaning
+      if (departmentid == "house") {
+        card += '<img class="card-img-top" src="/img/house.jpg" alt="home-image">';
+      } else if (departmentid == "auto") {
+        card += '<img class="card-img-top" src="/img/auto.jpg" alt="auto-image">';
+      } else if (departmentid == "pet") {
+        card += '<img class="card-img-top" src="/img/pet.jpg" alt="pet-image">';
+      } else if (departmentid == "cleaning") {
+        card += '<img class="card-img-top" src="/img/cleaning.jpg" alt="clean-image">';
+      }
+
+      card +=
+        '<div class="card-body">' +
+        '<h5 class="card-title">' + jobTitle + '</h5>' +
+        '<p class="card-text">' + jobDesc + '</p>' +
+       /* '<span ' +
+        '  data-target="#exampleUserProfile" ' +
+        '  data-toggle="modal" ' +
+        '  data-toggle="tooltip" ' +
+        '  data-placement="bottom" ' +
+        '  onclick="showProfileModal(\'' + username + '\');"' +
+        '  title="View User Profile" ' +
+        '  >' +
+        '    <i class="fas fa-address-card option-icon"></i>' +
+        '</span>' +
+        '<button ' +
+        '  type="button" ' +
+        '  onclick="electForJob(\'' + jobid + '\')" ' +
+        '  class="btn btn-outline-primary px-4">Elect</button>' + */
+        '</div>' +
+        '</div>';
+
+								
+
+      //append new job as first child
+      $('#jobPost-row').prepend(card);
+
+      console.log("posted.");
+    }
+  });
+}
+
+
+
+
 
 function deleteJob(jobid) {
   firebase.database().ref('Jobs').child(jobid).remove();
@@ -336,7 +390,7 @@ function displayJobToEmployer(jobTitle, jobDesc, jobCat, requestedBy, jobid, sho
  */
 function showWorkerQueueModal(workers, jobid) {
   console.log("showWorkerQueueModal(" + workers + ")");
-  console.log("jobid: "+jobid);
+  console.log("jobid: " + jobid);
   //var profilemodal = document.getElementById('student-username');
   //profilemodal.innerText = workers;
 
@@ -354,12 +408,12 @@ function showWorkerQueueModal(workers, jobid) {
   //$('#hiringModalContent').remove()
 
 
-  var listWithUsername = function(workerid, jobid) { 
+  var listWithUsername = function (workerid, jobid) {
     getUsernameOfId(workerid).then(function (username) {
       if (username) {
         console.log("username: " + username);
         console.log("workerid: " + workerid);
-        console.log("jobid: "+jobid);
+        console.log("jobid: " + jobid);
         var entry = '' +
           '<div class="modal-body"> ' +
           '<a href="#" ' +
@@ -381,8 +435,8 @@ function showWorkerQueueModal(workers, jobid) {
         $('#hiringModalContent').append(entry);
       }
     });
-    
-  }    
+
+  }
 
   for (var i = 0; i < workers.length; i++) {
     listWithUsername(workers[i], jobid);
@@ -398,13 +452,13 @@ function showWorkerProfile(workerid, username, jobid) {
   //var selectbtn = document.getElementById('selectUserBtn');
   var footer = document.getElementById('studentInfoModalFooter');
   footer.innerHTML = '' +
-  /*<button type="button" class="close" data-toggle="modal" data-target="#hiringModal" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>*/
+    /*<button type="button" class="close" data-toggle="modal" data-target="#hiringModal" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">×</span>
+                          </button>*/
     '<button id="selectUserBtn" ' +
     '        type="button" ' +
     '        data-dismiss="modal" ' +
-    '        onclick="selectUserForJob(\''+workerid+ '\',\'' + jobid + '\')" ' +
+    '        onclick="selectUserForJob(\'' + workerid + '\',\'' + jobid + '\')" ' +
     '        class="btn btn-outline-primary"> ' +
     'Select' +
     '</button>';
@@ -417,7 +471,7 @@ function showWorkerProfile(workerid, username, jobid) {
 
 
 function selectUserForJob(workerid, jobid) {
-  console.log("selectUserForJob("+workerid+", "+jobid+")");
+  console.log("selectUserForJob(" + workerid + ", " + jobid + ")");
   var updates = {};
   updates['/Jobs/' + jobid + "/completedBy"] = workerid;
 
@@ -464,26 +518,6 @@ function showProfileModal(requestedBy) {
 
 
 
-function fetchWorkers(workersRef, jobid) {
-  var workers = [];
-  workersRef.on('child_added', function (data) {
-    console.log("worker child added: ");
-    console.log(data.key);
-    console.log(JSON.stringify(data.val(), null, '  '));
-
-    //clean up previous sloppiness
-    //check if worker already exists in our array; if so, remove it from db and fail to push
-    console.log("location of this worker in our array: " + workers.indexOf(data.val()));
-    if (workers.indexOf(data.val()) == -1) {
-      console.log("worker is new; adding");
-      workers.push(data.val());
-    } else {
-      console.log("worker is a duplicate; removing");
-      removeWorkerKeyFromJob(data.key, jobid);
-    }
-  });
-  return workers;
-}
 
 
 
@@ -696,93 +730,131 @@ function getMyJobs(showCompletedOnly) {
 
 
 
+function removeJobKeyFromUserList(workerkey, jobid) {
+  console.log("removeWorkerFromJob(" + workerkey + ", " + jobid + ")");
+  firebase.database().ref('users/' + workerkey + '/approvedJobs').child(jobid).remove();
+}
+
+
+
+
+function fetchWorkers(workersRef, jobid) {
+  var workers = [];
+  workersRef.on('child_added', function (data) {
+    console.log("worker child added: ");
+    console.log(data.key);
+    console.log(JSON.stringify(data.val(), null, '  '));
+
+    //clean up previous sloppiness
+    //check if worker already exists in our array; if so, remove it from db and fail to push
+    console.log("location of this worker in our array: " + workers.indexOf(data.val()));
+    if (workers.indexOf(data.val()) == -1) {
+      console.log("worker is new; adding");
+      workers.push(data.val());
+    } else {
+      console.log("worker is a duplicate; removing");
+      removeWorkerKeyFromJob(data.key, jobid);
+    }
+  });
+  return workers;
+}
+
+
+
+function clearDuplicateJobsFromUserList(jobsRef, uid) {
+  console.log("clearDuplicateJobsFromUserList(" + uid + ")");
+  var jobs = [];
+  jobsRef.on('child_added', function (data) {
+    //console.log("child added: " + data.key);
+
+    //console.log("location of this worker in our array: " + jobs.indexOf(data.val()));
+    if (jobs.indexOf(data.val()) == -1) {
+      //console.log("jobid is new; adding");
+      jobs.push(data.val());
+      //console.log("jobs is: "+jobs);
+    } else {
+      //console.log("jobid is a duplicate; removing");
+      removeJobKeyFromUserList(currentUID, data.key);
+    }
+  });
+  return jobs;
+}
+
+
+
+
+
+
+
 //TODO: finish this
 function getMyAcceptedJobs() {
   console.log('getMyAcceptedJobs()');
 
-  /*
-  updates = {};
-  updates['/users/' + workerid + '/approvedJobs/' + newPostKey] = jobid;
-  */
+  var jobsRef = firebase.database().ref('users/' + currentUID + '/approvedJobs');
+  console.log("getMyAcceptedJobs(): checking for jobs at: " + 'users/' + currentUID + '/approvedJobs');
 
-  var jobsRef = firebase.database().ref('/users/'+currentUID+'/approvedJobs');
-  var jobPostsSection = document.getElementById('jobPost-row');
+  console.log("getMyAcceptedJobs(): clearing duplicates");
+  clearDuplicateJobsFromUserList(jobsRef, currentUID);
 
-  //clear out the dummy element
-  //$("#job-card").remove();
-  //$("#jobPost-row").empty();
-
-
-  var fetchPosts = function (postsRef, sectionElement) {
-
-    postsRef.on('child_added', function (data) {
-      console.log("child added: ");
-      console.log(JSON.stringify(data.val(), null, '  '));
-
-      /*
-      {
-        "department_id": "pet",
-        "jobDescription": "My puppies need to be walked every Tuesday at 6 PM",
-        "jobName": "Walk 2 Dogs",
-        "jobPicture": "https://firebasestorage.googleapis.com/v0/b/laborless-6d04f.appspot.com/o/dogs.jpg?alt=media&token=59606a5b-687f-49b1-82e2-f9583fc105f7",
-        "requestedBy": "y0ixAWrVCSbCsKH2rvCcn7dQAeC3",
-        "status": "incomplete"
-      }
-      */
-
-      var uid = firebase.auth().currentUser.uid;
-      var requestedBy = data.val().requestedBy;
-
-      if (requestedBy === uid) {
-        console.log("Found a job by this user.");
-        var jobTitle = data.val().jobName; //$("#job-title").val();
-        var jobDesc = data.val().jobDescription; //$("#job-description").val();
-        //displayJob(jobTitle, jobDesc, requestedBy);
-
-        firebase.database().ref('users/' + uid).once('value').then(function (snapshot) {
-          requestedBy = snapshot.val().username;
-
+  var getJobIds = function (jobsRef, uid, sectionElement) {
+    console.log("getJobIds(" + uid + ")");
+    var jobs = [];
+    jobsRef.on('child_added', function (snapshot) {
+      var fetchJobData = function (jRef, sectionElement, jobid) {
+        console.log("fetchJobData()");
+        jRef.on('value', function (snapshot) {
+          snapshot.forEach(function (childSnapshot) {
+            var childData = childSnapshot.val();
+            if (jobid === childSnapshot.key) {
+              console.log("fetchJobData(): childSnapshot: " + childSnapshot.key + ": " + JSON.stringify(childSnapshot, null, '  '));
+              var requestedBy = childSnapshot.val().requestedBy;
+              var jobTitle = childSnapshot.val().jobName;
+              var jobDesc = childSnapshot.val().jobDescription;
+              var status = childSnapshot.val().status;
+              var jobPicture = childSnapshot.val().jobPicture;
+              var department_id = childSnapshot.val().department_id;
+              displayAcceptedJobToStudent(jobTitle, jobDesc, requestedBy, department_id, jobid);
+              $("#job-card-dyn").show();
+            }
+          });
+        });
+        /*jRef.on('child_added', function (data) {
+          console.log("fetchJobData(): data: "+JSON.stringify(data, null, '  '));
+          console.log(data.key);
+          console.log(data.val());
+          var requestedBy = data.val().requestedBy;
+          var jobTitle = data.val().jobName;
+          var jobDesc = data.val().jobDescription;
           var status = data.val().status;
-          console.log("status: " + status);
           var jobPicture = data.val().jobPicture;
           var department_id = data.val().department_id;
-
-          if ((showCompletedOnly && status === "complete") || (!showCompletedOnly && status === "incomplete")) {
-            var workersRef = firebase.database().ref('Jobs/' + data.key + "/queuedWorkers");
-            var workers = fetchWorkers(workersRef, data.key);
-            console.log("workers: " + workers)
-            displayJobToEmployer(jobTitle, jobDesc, department_id, requestedBy, data.key, showCompletedOnly, workers);
-          }
-
-
+          console.log("fetchJobData(): job data child added");
+          console.log("fetchJobData(): jobid: " + jobid);
+          console.log("fetchJobData(): jobTitle: " + jobTitle);
+          console.log("fetchJobData(): requestedBy: " + requestedBy);
+          console.log("fetchJobData(): status: " + status);
+          displayJobToStudent(jobTitle, jobDesc, requestedBy, departmentid, jobid);
           $("#job-card-dyn").show();
+        });*/
+      };
 
-        });
-        //return firebase.database().ref('/users/' + userId).once('value').then(function (snapshot) {
-        //  var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-        //requestedBy = firebase.auth().currentUser.username;
-
-
-      }
-
+      /*snapshot.forEach(function(childSnapshot) {
+        var childData = childSnapshot.val();
+        console.log("getJobIds(): childSnapshot: "+JSON.stringify(childSnapshot, null, '  '));  
+      });*/
+      console.log("getJobIds(): snapshot: " + JSON.stringify(snapshot, null, '  '));
+      var jobid = snapshot.val();
+      var jobsDataRef = firebase.database().ref('/Jobs/');
+      console.log("getJobIds(): looking up job: " + jobid);
+      fetchJobData(jobsDataRef, sectionElement, jobid);
+      $("#jobPost-row").remove("#job-card");
+      listeningFirebaseRefs.push(jobsRef);
     });
-    postsRef.on('child_changed', function (data) {
-      console.log("child changed");
-    });
-    postsRef.on('child_removed', function (data) {
-      console.log("child removed");
-    });
 
-  };
-
-  // Fetching and displaying all posts of each sections.
-  console.log("fetching jobs");
-  fetchPosts(jobsRef, jobPostsSection);
-
-  $("#jobPost-row").remove("#job-card");
-
-  // Keep track of all Firebase refs we are listening to.
-  listeningFirebaseRefs.push(jobsRef);
+  }
+  var sectionElement = document.getElementById('jobPost-row');
+  console.log("getMyAcceptedJobs(): calling getJobsIds");
+  getJobIds(jobsRef, currentUID, sectionElement);
 }
 
 
@@ -799,7 +871,7 @@ function handleStudentPageData() {
   var uid = firebase.auth().currentUser.uid;
   firebase.database().ref('users/' + uid).once('value').then(function (snapshot) {
     var username = snapshot.val().username;
-    console.log("username: " + username);
+    console.log("handleStudentPageData(): username: " + username);
 
     document.getElementById('greeting').innerHTML = "<h2>Hi " + username + "!</h2>";
 
@@ -956,6 +1028,7 @@ function onAuthStateChanged(user) {
 
     if (endsWith(window.location.pathname, "studentPage.html")) {
       handleStudentPageData();
+      getMyAcceptedJobs();
     }
 
   } else { // User is signed out.
@@ -1150,9 +1223,6 @@ function initApp() {
     getMyJobs(true);
   }
 
-  else if (endsWith(window.location.pathname, "studentPage.html")) {
-    getMyAcceptedJobs();
-  }
 
   //load available jobs based on category for students viewing categories
   //department_id can be: house, auto, pet, cleaning
