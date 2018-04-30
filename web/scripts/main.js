@@ -409,11 +409,22 @@ function showWorkerQueueModal(workers, jobid) {
 
 
   var listWithUsername = function (workerid, jobid) {
-    getUsernameOfId(workerid).then(function (username) {
-      if (username) {
+    getUserDataOfId(workerid).then(function (userdata) {
+      if (userdata) {
+        console.log("userdata: "+userdata);
+        userdata = userdata.split(',');
+        var username = userdata[0];
+        var profilepic = userdata[1];
+        var affordability = userdata[2];
+        var knowledge = userdata[3];
+        var professionalism = userdata[4];
         console.log("username: " + username);
         console.log("workerid: " + workerid);
         console.log("jobid: " + jobid);
+        console.log("profilepic: " + profilepic);
+        console.log("affordability: " + affordability);
+        console.log("knowledge: "+ knowledge);
+        console.log("professionalism: "+ professionalism);
         var entry = '' +
           '<div class="modal-body"> ' +
           '<a href="#" ' +
@@ -421,7 +432,7 @@ function showWorkerQueueModal(workers, jobid) {
           '   data-toggle="modal" ' +
           '   data-target="#studentInfo" ' +
           '   data-dismiss="modal" ' +
-          '   onclick="showWorkerProfile(\'' + workerid + '\', \'' + username + '\', \'' + jobid + '\');"' +
+          '   onclick="showWorkerProfile(\'' + workerid + '\', \'' + username + '\', \'' + jobid + '\', \'' + profilepic + '\', \'' + affordability + '\', \'' + knowledge + '\', \'' + professionalism+ '\');"' +
           '   style="color:black !important; font-size:1.2rem !important">' +
           username
         '</a> ' +
@@ -445,11 +456,59 @@ function showWorkerQueueModal(workers, jobid) {
 
 
 
-function showWorkerProfile(workerid, username, jobid) {
+function showWorkerProfile(workerid, username, jobid, profilepic, affordability, knowledge, professionalism) {
   console.log("showWorkerProfile(" + workerid + ")");
   var profilemodal = document.getElementById('exampleModalLongTitle');
   profilemodal.innerText = username + "\'s Information";
   //var selectbtn = document.getElementById('selectUserBtn');
+
+  var modalbody = document.getElementById('studentInfoModalBody');
+  var content = "";
+  if(profilepic !== "null") {
+    content += '<img src="' + profilepic + '" class="rounded mx-auto mb-5 d-block" alt="user-image" width="160" height="160">';
+  } else {
+    content += '<img src="img/silhouette.jpg" class="rounded mx-auto mb-5 d-block" alt="user-image">';
+  }
+
+  content += '<h5>Knowledge</h5> ' +
+  '<div class="progress my-2"> ';
+
+  if(knowledge != null) {
+    knowledge *= 10;
+    console.log("knowledge: "+knowledge);
+    content += '<div class="progress-bar" role="progressbar" style="width: '+knowledge+'%" aria-valuenow="' + knowledge + '" aria-valuemin="0" aria-valuemax="100"></div>';
+  } else {
+    console.log("no knowledge");
+    content += '<div class="progress-bar" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>'
+  }
+  content += ' </div> ' +
+  '<h5>Professionalism</h5> ' +
+  '<div class="progress my-2"> ';
+
+  if(professionalism != null) {
+    professionalism *= 10;
+    console.log("professionalism: "+professionalism);
+    content += '<div class="progress-bar" role="progressbar" style="width: '+professionalism+'%" aria-valuenow="' + professionalism + '" aria-valuemin="0" aria-valuemax="100"></div>';
+  } else {
+    console.log("no professionalism");
+    content += '<div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>';
+  } 
+  content += '</div> ' +
+  '<h5>Affordability</h5> ' +
+  '<div class="progress my-2"> ';
+
+  if(affordability != null) {
+    affordability *= 10;
+    console.log("affordability: "+affordability);
+    content += '<div class="progress-bar" role="progressbar" style="width: '+affordability+'%" aria-valuenow="' + affordability + '" aria-valuemin="0" aria-valuemax="100"></div>'
+  } else {
+    console.log("no affordability");
+    content += '<div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>';
+  }
+  content += '</div> ';
+
+  modalbody.innerHTML = content;
+
   var footer = document.getElementById('studentInfoModalFooter');
   footer.innerHTML = '' +
     /*<button type="button" class="close" data-toggle="modal" data-target="#hiringModal" data-dismiss="modal" aria-label="Close">
@@ -487,6 +546,108 @@ function selectUserForJob(workerid, jobid) {
 
 
 }
+
+
+function averageOfArray(arrayofnumbers) {
+  var sum = 0;
+  var length = arrayofnumbers.length;
+  for(var i = 0; i < length; i++) {
+    sum += arrayofnumbers[i];
+  }
+  return sum/length;
+}
+
+
+
+function calculateSingleRating(area) {
+  console.log("calculateSingleRating()");
+  console.log(area);
+  var jsonstring = JSON.stringify(area, null, '  ')
+  jsonstring = '[' + jsonstring + ']';
+  console.log(jsonstring);
+  var test = JSON.parse(jsonstring);
+  var ratingarray = []
+  for(var i in test){
+    var key = i;
+    var val = test[i];
+    for(var j in val){
+        var sub_key = j;
+        var sub_val = val[j];
+        console.log(sub_val);
+        ratingarray.push(sub_val);
+    }
+  }
+  console.log(ratingarray);
+  var average = averageOfArray(ratingarray);
+  return average;
+}
+
+
+function calculateAllRatings(allratings) {
+  console.log("calculateAllRatings()");
+  console.log(typeof(allratings));
+
+  if(allratings != null) {
+    var affordability = allratings.affordability;
+    var knowledge = allratings.knowledge;
+    var professionalism = allratings.professionalism;
+
+    affordability = calculateSingleRating(affordability);
+    knowledge = calculateSingleRating(knowledge);
+    professionalism = calculateSingleRating(professionalism);
+
+    console.log("average affordability: " + affordability);
+    console.log("average knowledge: " + knowledge);
+    console.log("average professionalism: "+ professionalism);
+    return [affordability, knowledge, professionalism];
+  } else {
+    return null;
+  }
+}
+
+
+
+function getUserRatings(uid) {
+  console.log("getUserRatings()");
+  var ratings = firebase.database().ref('ratings/' + uid).once('value').then(function (snapshot) {
+    if(snapshot != null) {
+      return calculateAllRatings(snapshot.val());
+    } else {
+      console.log("no ratings");
+      return null;
+    }
+  });
+  return ratings;
+}
+
+
+function getUserDataOfId(uid) {
+  console.log("getUserDataOfId()");
+  var userdata = firebase.database().ref('users/' + uid).once('value').then(function (snapshot) {
+    console.log(snapshot.val());
+    console.log("profilePicture: " +snapshot.val().profilePicture);
+    var username = snapshot.val().username;
+    var profilepic = snapshot.val().profilePicture;
+    if(!profilepic) {
+      profilepic = "null";
+    }
+    var ratings = getUserRatings(uid).then(function (rsnap) {;
+      console.log("getUserDataOfId(): ratings: " + rsnap);
+      var result = ""+username+","+profilepic+ ",";
+      if(rsnap)
+        result += rsnap[0] + "," + rsnap[1] + "," + rsnap[2];
+      else {
+        result += "null,null,null";
+      }
+      console.log("getUserDataOfId(): returning result: "+result);
+      return result;
+    });
+    return ratings;
+  }.bind(this));
+  console.log("getUserDataOfId(): userdata: " + userdata);
+  return userdata;
+}
+
 
 
 function getUsernameOfId(uid) {
